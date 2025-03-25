@@ -7,7 +7,7 @@ import ru.varnavskii.librarydynamika.controller.dto.ClientOut;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
 
 @Component
-public class ClientMapping {
+public class ClientMapper {
 
     public ClientEntity toEntity(ClientIn clientIn) {
         return ClientEntity.builder()

@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
 import ru.varnavskii.librarydynamika.controller.dto.ClientIn;
-import ru.varnavskii.librarydynamika.controller.mapping.ClientMapping;
+import ru.varnavskii.librarydynamika.controller.mapping.ClientMapper;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
 import ru.varnavskii.librarydynamika.service.ClientService;
 
@@ -39,7 +39,7 @@ public class ClientController {
     private static final String NEW_CLIENT_ATTRIBUTE_NAME = "newClient";
 
     private final ClientService clientService;
-    private final ClientMapping clientMapping;
+    private final ClientMapper clientMapper;
 
     @GetMapping("/list")
     public ModelAndView getAllClients(@RequestParam(defaultValue = "0") int page,
@@ -60,7 +60,7 @@ public class ClientController {
         ClientEntity client = clientService.getClientOrThrowException(id);
 
         modelAndView.setViewName(CLIENT_DETAIL_VIEW);
-        modelAndView.addObject(CLIENT_ATTRIBUTE_NAME, clientMapping.toOut(client));
+        modelAndView.addObject(CLIENT_ATTRIBUTE_NAME, clientMapper.toOut(client));
         return modelAndView;
     }
 
@@ -88,7 +88,7 @@ public class ClientController {
             return modelAndView;
         }
 
-        ClientEntity clientEntity = clientMapping.toEntity(clientIn);
+        ClientEntity clientEntity = clientMapper.toEntity(clientIn);
         clientEntity = clientService.createClient(clientEntity);
 
         modelAndView.setViewName("redirect:/client/" + clientEntity.getId());
@@ -105,12 +105,12 @@ public class ClientController {
             return modelAndView;
         }
 
-        ClientEntity clientEntity = clientMapping.toEntity(clientIn);
+        ClientEntity clientEntity = clientMapper.toEntity(clientIn);
         clientEntity.setId((long) id);
         clientEntity = clientService.updateClient(clientEntity);
 
         modelAndView.setViewName(CLIENT_DETAIL_VIEW);
-        modelAndView.addObject(CLIENT_ATTRIBUTE_NAME, clientMapping.toOut(clientEntity));
+        modelAndView.addObject(CLIENT_ATTRIBUTE_NAME, clientMapper.toOut(clientEntity));
         return modelAndView;
     }
 

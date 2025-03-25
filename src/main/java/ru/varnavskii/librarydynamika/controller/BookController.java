@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
 import ru.varnavskii.librarydynamika.controller.dto.BookIn;
-import ru.varnavskii.librarydynamika.controller.mapping.BookMapping;
+import ru.varnavskii.librarydynamika.controller.mapping.BookMapper;
 import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 import ru.varnavskii.librarydynamika.service.BookService;
 
@@ -38,7 +38,7 @@ public class BookController {
     private static final String NEW_BOOK_ATTRIBUTE_NAME = "newBook";
 
     private final BookService bookService;
-    private final BookMapping bookMapping;
+    private final BookMapper bookMapper;
 
     @GetMapping("/list")
     public ModelAndView getAllBooks(@RequestParam(defaultValue = "0") int page,
@@ -59,7 +59,7 @@ public class BookController {
         BookEntity book = bookService.getBookOrThrowException(id);
 
         modelAndView.setViewName(BOOK_DETAIL_VIEW);
-        modelAndView.addObject(BOOK_ATTRIBUTE_NAME, bookMapping.toOut(book));
+        modelAndView.addObject(BOOK_ATTRIBUTE_NAME, bookMapper.toOut(book));
         return modelAndView;
     }
 
@@ -87,7 +87,7 @@ public class BookController {
             modelAndView.setViewName(BOOK_LIST_VIEW);
             return modelAndView;
         }
-        BookEntity bookEntity = bookMapping.toEntity(bookIn);
+        BookEntity bookEntity = bookMapper.toEntity(bookIn);
         bookEntity = bookService.createBook(bookEntity);
 
         modelAndView.setViewName("redirect:/book/" + bookEntity.getId());
@@ -103,12 +103,12 @@ public class BookController {
             modelAndView.setViewName("redirect:/book/" + id);
             return modelAndView;
         }
-        BookEntity bookEntity = bookMapping.toEntity(bookIn);
+        BookEntity bookEntity = bookMapper.toEntity(bookIn);
         bookEntity.setId((long) id);
         bookEntity = bookService.updateBook(bookEntity);
 
         modelAndView.setViewName(BOOK_DETAIL_VIEW);
-        modelAndView.addObject(BOOK_ATTRIBUTE_NAME, bookMapping.toOut(bookEntity));
+        modelAndView.addObject(BOOK_ATTRIBUTE_NAME, bookMapper.toOut(bookEntity));
         return modelAndView;
     }
 

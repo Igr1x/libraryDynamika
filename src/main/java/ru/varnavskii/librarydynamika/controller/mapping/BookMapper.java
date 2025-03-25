@@ -7,7 +7,7 @@ import ru.varnavskii.librarydynamika.controller.dto.BookOut;
 import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 
 @Component
-public class BookMapping {
+public class BookMapper {
 
     public BookEntity toEntity(BookIn bookIn) {
         return BookEntity.builder()
