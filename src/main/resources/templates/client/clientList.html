@@ -9,7 +9,7 @@
 <div>
     <a th:href="@{/client/list(page=0)}">Первая</a>
     <a th:href="@{/client/list(page=${currentPage - 1})}" th:if="${currentPage > 0}">Предыдущая</a>
-    <span>Страница <span th:text="${currentPage + 1}">0</span></span>
+    <span>Страница <span th:text="${currentPage != null ? currentPage + 1 : 1}">0</span></span>
     <a th:href="@{/client/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages - 1}">Следующая</a>
     <a th:href="@{/client/list(page=${totalPages - 1})}" th:if="${totalPages > 1}">Последняя</a>
 </div>
@@ -34,7 +34,7 @@
 </div>
 
 <h2>Добавить клиента</h2>
-<form th:action="@{/client}" th:object="${newClient}" method="post">
+<form th:action="@{/templates/client}" th:object="${newClient}" method="post">
     <div>
         <label for="firstName">Имя:</label>
         <input type="text" id="firstName" th:field="*{firstName}" required/>

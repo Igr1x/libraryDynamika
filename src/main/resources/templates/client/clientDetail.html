@@ -25,19 +25,19 @@
 <form th:action="@{/client/{id}(id=${client.id})}" th:object="${client}" method="post">
     <div>
         <label for="firstName">Фамилия:</label>
-        <input type="text" id="firstName" th:field="*{firstName}" required />
+        <input type="text" id="firstName" th:field="*{firstName}" required/>
     </div>
     <div>
         <label for="lastName">Имя:</label>
-        <input type="text" id="lastName" th:field="*{lastName}" required />
+        <input type="text" id="lastName" th:field="*{lastName}" required/>
     </div>
     <div>
         <label for="patronymic">Отчество:</label>
-        <input type="text" id="patronymic" th:field="*{patronymic}" />
+        <input type="text" id="patronymic" th:field="*{patronymic}"/>
     </div>
     <div>
         <label for="birthDate">Дата рождения:</label>
-        <input type="date" id="birthDate" th:field="*{birthDate}" required />
+        <input type="date" id="birthDate" th:field="*{birthDate}" required/>
     </div>
     <div>
         <button type="submit">Обновить</button>
@@ -45,9 +45,9 @@
 </form>
 
 <div>
-<button type="button" th:attr="onclick='deleteClient(' + ${client.id} + ')'" style="color: red;">
-    Удалить клиента
-</button>
+    <button type="button" th:attr="onclick='deleteClient(' + ${client.id} + ')'" style="color: red;">
+        Удалить клиента
+    </button>
 </div>
 
 <a href="/client/list">Вернуться к списку клиентов</a>

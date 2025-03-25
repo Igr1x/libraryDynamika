@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book List</title>
+</head>
+<body>
+<h1>Все книги</h1>
+
+<a th:href="@{/book/list(page=0)}">Первая</a>
+<a th:href="@{/book/list(page=${currentPage != null ? currentPage - 1 : 0})}" th:if="${currentPage != null and currentPage > 0}">Предыдущая</a>
+<span>Страница <span th:text="${currentPage != null ? currentPage + 1 : 1}">0</span></span>
+<a th:href="@{/book/list(page=${currentPage != null ? currentPage + 1 : 0})}" th:if="${currentPage != null and currentPage < totalPages - 1}">Следующая</a>
+<a th:href="@{/book/list(page=${totalPages != null && totalPages > 1 ? totalPages - 1 : 0})}" th:if="${totalPages != null and totalPages > 1}">Последняя</a>
+
+
+<div th:if="${books != null and books.size() > 0}">
+    <h3>Название, автор, isbn</h3>
+    <form id="deleteForm" method="POST" action="/book/delete">
+        <input type="hidden" name="page" th:value="${currentPage}"/>
+        <ul>
+            <li th:each="book : ${books}">
+                <input type="checkbox" th:value="${book.id}" name="idsToDelete"/>
+                <a th:href="@{/book/{id}(id=${book.id})}"
+                   th:text="${book.title} + ', ' + ${book.author} + ', ' + ${book.isbn}"></a>
+            </li>
+        </ul>
+        <button type="submit">Удалить выбранные</button>
+    </form>
+</div>
+
+<div th:if="${books == null or books.size() == 0}">
+    <p>Книги не созданы.</p>
+</div>
+
+<h2>Добавить книги</h2>
+<form th:action="@{/templates/book}" th:object="${newBook}" method="post">
+    <div>
+        <label for="title">Название</label>
+        <input type="text" id="title" th:field="*{title}" required />
+        <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+    </div>
+    <div>
+        <label for="author">Автор:</label>
+        <input type="text" id="author" th:field="*{author}" required />
+        <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+    </div>
+    <div>
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" th:field="*{isbn}" />
+        <div th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></div>
+    </div>
+    <div>
+        <button type="submit">Добавить книгу</button>
+    </div>
+</form>
+
+<a href="/home">Вернуться на главную</a>
+</body>
+</html>

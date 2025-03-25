@@ -2,6 +2,8 @@ package ru.varnavskii.librarydynamika.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import ru.varnavskii.librarydynamika.repository.BookRepository;
@@ -9,6 +11,8 @@ import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 import ru.varnavskii.librarydynamika.service.BookService;
 
 import javax.persistence.EntityNotFoundException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +39,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<BookEntity> getBooks(PageRequest pageRequest) {
+        return bookRepository.findAll(pageRequest);
+    }
+
+    @Override
+    public void deleteByIds(List<Long> ids) {
+        bookRepository.deleteAllById(ids);
     }
 }
