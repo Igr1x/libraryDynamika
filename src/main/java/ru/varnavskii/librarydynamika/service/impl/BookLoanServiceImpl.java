@@ -31,7 +31,7 @@ public class BookLoanServiceImpl implements BookLoanService {
     }
 
     @Override
-    public void takeBook(long userId, long bookId) {
+    public BookLoanEntity takeBook(long userId, long bookId) {
         UserEntity user = userService.getUserOrThrowException(userId);
         BookEntity book = bookService.getBookOrThrowException(bookId);
         BookLoanEntity bookLoanEntity = BookLoanEntity.builder()
@@ -39,13 +39,13 @@ public class BookLoanServiceImpl implements BookLoanService {
             .book(book)
             .borrowedAt(LocalDate.now())
             .build();
-        bookLoanRepository.save(bookLoanEntity);
+        return bookLoanRepository.save(bookLoanEntity);
     }
 
     @Override
-    public void returnBook(long id) {
+    public BookLoanEntity returnBook(long id) {
         BookLoanEntity existedBookLoan = findBookLoanOrThrowException(id);
         existedBookLoan.setReturnedAt(LocalDate.now());
-        bookLoanRepository.save(existedBookLoan);
+        return bookLoanRepository.save(existedBookLoan);
     }
 }
