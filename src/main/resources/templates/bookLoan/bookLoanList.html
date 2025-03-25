@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book loan List</title>
+</head>
+<body>
+<h1>Все записи</h1>
+
+<form method="get" action="/bookLoan/list">
+    <input type="hidden" name="page" value="0"/>
+    <label>
+        <input type="checkbox" name="showReturned" value="true" th:checked="${showReturned}"/>
+        Показать возвращенные книги
+    </label>
+    <div>
+        <button type="submit">Применить</button>
+    </div>
+</form>
+
+<a th:href="@{/bookLoan/list(page=0)}">Первая</a>
+<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage - 1 : 0})}" th:if="${currentPage != null and currentPage > 0}">Предыдущая</a>
+<span>Страница <span th:text="${currentPage != null ? currentPage + 1 : 1}">0</span></span>
+<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage + 1 : 0})}" th:if="${currentPage != null and currentPage < totalPages - 1}">Следующая</a>
+<a th:href="@{/bookLoan/list(page=${totalPages != null && totalPages > 1 ? totalPages - 1 : 0})}" th:if="${totalPages != null and totalPages > 1}">Последняя</a>
+
+<div th:if="${bookLoans != null and bookLoans.size() > 0}">
+    <h3>Клиент, название книги, дата взятия</h3>
+    <form id="returnForm" method="POST">
+        <input type="hidden" name="page" th:value="${currentPage}"/>
+        <input type="hidden" name="showReturned" th:value="${showReturned}"/>
+        <ul>
+            <li th:each="bookLoan : ${bookLoans}">
+                <span th:text="${bookLoan.client} + ', ' + ${bookLoan.book} + ', ' + ${bookLoan.borrowedAt}"></span>
+                <button type="submit" th:formaction="@{/bookLoan/returnBook/{id}(id=${bookLoan.id}, page=${currentPage}, showReturned=${showReturned})}">
+                    Вернуть книгу
+                </button>
+            </li>
+        </ul>
+    </form>
+</div>
+
+<div th:if="${bookLoans == null or bookLoans.size() == 0}">
+    <p>Записи отсутствуют</p>
+</div>
+
+<a href="/home">Вернуться на главную</a>
+</body>
+</html>

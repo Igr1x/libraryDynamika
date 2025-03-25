@@ -34,7 +34,7 @@
 </div>
 
 <h2>Добавить клиента</h2>
-<form th:action="@{/templates/client}" th:object="${newClient}" method="post">
+<form th:action="@{/client}" th:object="${newClient}" method="post">
     <div>
         <label for="firstName">Имя:</label>
         <input type="text" id="firstName" th:field="*{firstName}" required/>

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import ru.varnavskii.librarydynamika.repository.ClientRepository;
@@ -12,6 +13,7 @@ import ru.varnavskii.librarydynamika.service.ClientService;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -49,5 +51,10 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteByIds(List<Long> ids) {
         clientRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public Page<ClientEntity> getClients(Specification<ClientEntity> specification, PageRequest pageRequest) {
+        return clientRepository.findAll(specification, pageRequest);
     }
 }

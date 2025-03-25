@@ -2,6 +2,8 @@ package ru.varnavskii.librarydynamika.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ru.varnavskii.librarydynamika.repository.BookLoanRepository;
@@ -47,5 +49,13 @@ public class BookLoanServiceImpl implements BookLoanService {
         BookLoanEntity existedBookLoan = findBookLoanOrThrowException(id);
         existedBookLoan.setReturnedAt(LocalDate.now());
         return bookLoanRepository.save(existedBookLoan);
+    }
+
+    @Override
+    public Page<BookLoanEntity> getBookLoans(Pageable pageable, boolean returnedFilter) {
+        if (returnedFilter) {
+            return bookLoanRepository.findAll(pageable);
+        }
+        return bookLoanRepository.findAllByReturnedAtIsNull(pageable);
     }
 }

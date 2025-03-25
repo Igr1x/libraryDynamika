@@ -20,6 +20,6 @@ CREATE TABLE book_loans (
     borrowed_at DATE NOT NULL,
     returned_at DATE DEFAULT NULL,
 
-    CONSTRAINT fk_book_loans_client FOREIGN KEY (client_id) REFERENCES client(id),
-    CONSTRAINT fk_book_loans_book FOREIGN KEY (book_id) REFERENCES book(id)
+    CONSTRAINT fk_book_loans_client FOREIGN KEY (client_id) REFERENCES client(id) ON DELETE CASCADE,
+    CONSTRAINT fk_book_loans_book FOREIGN KEY (book_id) REFERENCES book(id) ON DELETE CASCADE
 );

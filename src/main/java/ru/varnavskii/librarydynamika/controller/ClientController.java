@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import ru.varnavskii.librarydynamika.common.utils.ClientFilterApplier;
 import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
+import ru.varnavskii.librarydynamika.controller.dto.ClientFilterIn;
 import ru.varnavskii.librarydynamika.controller.dto.ClientIn;
 import ru.varnavskii.librarydynamika.controller.mapping.ClientMapper;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
@@ -111,6 +114,22 @@ public class ClientController {
 
         modelAndView.setViewName(CLIENT_DETAIL_VIEW);
         modelAndView.addObject(CLIENT_ATTRIBUTE_NAME, clientMapper.toOut(clientEntity));
+        return modelAndView;
+    }
+
+    @GetMapping
+    public ModelAndView getClientsWithFilter(@ModelAttribute ClientFilterIn clientFilterIn,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") int size,
+                                             ModelAndView modelAndView) {
+        Specification<ClientEntity> specification = ClientFilterApplier.withFilters(clientFilterIn);
+        Page<ClientEntity> clientsPage = clientService.getClients(specification, PageRequest.of(page, size));
+        modelAndView.addObject("clients", clientsPage.getContent()); // Список клиентов
+        modelAndView.addObject("totalPages", clientsPage.getTotalPages()); // Общее количество страниц
+        modelAndView.addObject("currentPage", page); // Текущая страница
+        modelAndView.addObject("size", size); // Размер страницы
+        modelAndView.addObject("clientFilterIn", clientFilterIn); // Передаем объект фильтра для повторного использования
+        modelAndView.setViewName("client/list"); // Название представления
         return modelAndView;
     }
 
