@@ -38,10 +38,12 @@
     <div>
         <label for="firstName">Имя:</label>
         <input type="text" id="firstName" th:field="*{firstName}" required/>
+        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
     </div>
     <div>
         <label for="lastName">Фамилия:</label>
         <input type="text" id="lastName" th:field="*{lastName}" required/>
+        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
     </div>
     <div>
         <label for="patronymic">Отчетсво (опциально):</label>
@@ -50,6 +52,7 @@
     <div>
         <label for="birthDate">Дата рождения:</label>
         <input type="date" id="birthDate" th:field="*{birthDate}" required/>
+        <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
     </div>
     <div>
         <button type="submit">Добавить клиента</button>

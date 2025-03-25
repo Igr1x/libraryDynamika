@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
 import ru.varnavskii.librarydynamika.controller.dto.ClientIn;
 import ru.varnavskii.librarydynamika.controller.mapping.ClientMapping;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
@@ -31,8 +32,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClientController {
 
-    private static final String CLIENT_LIST_VIEW = "clientList";
-    private static final String CLIENT_DETAIL_VIEW = "clientDetail";
+    private static final String CLIENT_LIST_VIEW = "client/clientList";
+    private static final String CLIENT_DETAIL_VIEW = "client/clientDetail";
+    private static final String CLIENT_ATTRIBUTE_NAME = "client";
+    private static final String CLIENTS_ATTRIBUTE_NAME = "clients";
+    private static final String NEW_CLIENT_ATTRIBUTE_NAME = "newClient";
 
     private final ClientService clientService;
     private final ClientMapping clientMapping;
@@ -43,10 +47,10 @@ public class ClientController {
                                       ModelAndView modelAndView) {
         Page<ClientEntity> clients = clientService.getClients(PageRequest.of(page, size));
 
-        modelAndView.addObject("clients", clients.getContent());
-        modelAndView.addObject("currentPage", page);
-        modelAndView.addObject("totalPages", clients.getTotalPages());
-        modelAndView.addObject("newClient", new ClientIn(null, null, null, null));
+        modelAndView.addObject(CLIENTS_ATTRIBUTE_NAME, clients.getContent());
+        modelAndView.addObject(PaginationUtils.CURRENT_PAGE_ATTRIBUTE, page);
+        modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, clients.getTotalPages());
+        modelAndView.addObject(NEW_CLIENT_ATTRIBUTE_NAME, new ClientIn(null, null, null, null));
         modelAndView.setViewName(CLIENT_LIST_VIEW);
         return modelAndView;
     }
@@ -56,7 +60,7 @@ public class ClientController {
         ClientEntity client = clientService.getClientOrThrowException(id);
 
         modelAndView.setViewName(CLIENT_DETAIL_VIEW);
-        modelAndView.addObject("client", clientMapping.toOut(client));
+        modelAndView.addObject(CLIENT_ATTRIBUTE_NAME, clientMapping.toOut(client));
         return modelAndView;
     }
 
@@ -76,7 +80,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ModelAndView createClient(@Valid @ModelAttribute("newClient") ClientIn clientIn,
+    public ModelAndView createClient(@Valid @ModelAttribute(NEW_CLIENT_ATTRIBUTE_NAME) ClientIn clientIn,
                                      BindingResult result,
                                      ModelAndView modelAndView) {
         if (result.hasErrors()) {
@@ -106,7 +110,7 @@ public class ClientController {
         clientEntity = clientService.updateClient(clientEntity);
 
         modelAndView.setViewName(CLIENT_DETAIL_VIEW);
-        modelAndView.addObject("client", clientMapping.toOut(clientEntity));
+        modelAndView.addObject(CLIENT_ATTRIBUTE_NAME, clientMapping.toOut(clientEntity));
         return modelAndView;
     }
 
