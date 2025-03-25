@@ -2,6 +2,8 @@ package ru.varnavskii.librarydynamika.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,10 +38,14 @@ public class ClientController {
     private final ClientMapping clientMapping;
 
     @GetMapping("/list")
-    public ModelAndView getAllClients(ModelAndView modelAndView) {
-        List<ClientEntity> allClients = clientService.getAllClients();
+    public ModelAndView getAllClients(@RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "10") int size,
+                                      ModelAndView modelAndView) {
+        Page<ClientEntity> clients = clientService.getClients(PageRequest.of(page, size));
 
-        modelAndView.addObject("clients", allClients);
+        modelAndView.addObject("clients", clients.getContent());
+        modelAndView.addObject("currentPage", page);
+        modelAndView.addObject("totalPages", clients.getTotalPages());
         modelAndView.addObject("newClient", new ClientIn(null, null, null, null));
         modelAndView.setViewName(CLIENT_LIST_VIEW);
         return modelAndView;
@@ -57,6 +64,15 @@ public class ClientController {
     public ResponseEntity<String> deleteClient(@PathVariable int id) {
         clientService.deleteClient(id);
         return ResponseEntity.ok(String.format("Client with id %d deleted", id));
+    }
+
+    @PostMapping("/delete")
+    public ModelAndView deleteClientsByIds(@RequestParam List<Long> idsToDelete,
+                                           @RequestParam int page,
+                                           ModelAndView modelAndView) {
+        clientService.deleteByIds(idsToDelete);
+        modelAndView.setViewName("redirect:/client/list?page=" + page);
+        return modelAndView;
     }
 
     @PostMapping

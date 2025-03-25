@@ -44,9 +44,11 @@
     </div>
 </form>
 
+<div>
 <button type="button" th:attr="onclick='deleteClient(' + ${client.id} + ')'" style="color: red;">
     Удалить клиента
 </button>
+</div>
 
 <a href="/client/list">Вернуться к списку клиентов</a>
 </body>

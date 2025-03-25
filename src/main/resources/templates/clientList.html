@@ -6,14 +6,27 @@
 </head>
 <body>
 <h1>Все клиенты</h1>
+<div>
+    <a th:href="@{/client/list(page=0)}">Первая</a>
+    <a th:href="@{/client/list(page=${currentPage - 1})}" th:if="${currentPage > 0}">Предыдущая</a>
+    <span>Страница <span th:text="${currentPage + 1}">0</span></span>
+    <a th:href="@{/client/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages - 1}">Следующая</a>
+    <a th:href="@{/client/list(page=${totalPages - 1})}" th:if="${totalPages > 1}">Последняя</a>
+</div>
 
 <div th:if="${clients != null and clients.size() > 0}">
-    <h3>Имя и фамилия</h3>
-    <ul>
-        <li th:each="client : ${clients}">
-            <a th:href="@{/client/{id}(id=${client.id})}" th:text="${client.firstName} + ' ' + ${client.lastName}"></a>
-        </li>
-    </ul>
+    <h3>Имя, фамилия, дата рождения</h3>
+    <form id="deleteForm" method="POST" action="/client/delete">
+        <input type="hidden" name="page" th:value="${currentPage}"/>
+        <ul>
+            <li th:each="client : ${clients}">
+                <input type="checkbox" th:value="${client.id}" name="idsToDelete"/>
+                <a th:href="@{/client/{id}(id=${client.id})}"
+                   th:text="${client.firstName} + ' ' + ${client.lastName} + ' ' + ${client.birthDate}"></a>
+            </li>
+        </ul>
+        <button type="submit">Удалить выбранные</button>
+    </form>
 </div>
 
 <div th:if="${clients == null or clients.size() == 0}">

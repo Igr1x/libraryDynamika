@@ -2,6 +2,8 @@ package ru.varnavskii.librarydynamika.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import ru.varnavskii.librarydynamika.repository.ClientRepository;
@@ -35,12 +37,17 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ClientEntity> getAllClients() {
-        return clientRepository.findAll();
+    public Page<ClientEntity> getClients(PageRequest pageRequest) {
+        return clientRepository.findAll(pageRequest);
     }
 
     @Override
     public void deleteClient(long id) {
         clientRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByIds(List<Long> ids) {
+        clientRepository.deleteAllById(ids);
     }
 }
