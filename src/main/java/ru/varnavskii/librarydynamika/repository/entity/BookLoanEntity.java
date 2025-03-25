@@ -24,7 +24,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "book_loans")
-public class BookLoan {
+public class BookLoanEntity {
     private static final String USER_ID_COLUMN = "user_id";
     private static final String BOOK_ID_COLUMN = "book_id";
 
@@ -34,11 +34,11 @@ public class BookLoan {
 
     @ManyToOne
     @JoinColumn(name = USER_ID_COLUMN, nullable = false)
-    private User user;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = BOOK_ID_COLUMN, nullable = false)
-    private Book book;
+    private BookEntity book;
 
     @Column(nullable = false)
     private LocalDate borrowedAt;
