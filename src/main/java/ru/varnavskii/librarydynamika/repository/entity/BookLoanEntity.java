@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "book_loans")
 public class BookLoanEntity {
-    private static final String USER_ID_COLUMN = "user_id";
+    private static final String CLIENT_ID_COLUMN = "client_id";
     private static final String BOOK_ID_COLUMN = "book_id";
 
     @Id
@@ -33,8 +33,8 @@ public class BookLoanEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = USER_ID_COLUMN, nullable = false)
-    private UserEntity user;
+    @JoinColumn(name = CLIENT_ID_COLUMN, nullable = false)
+    private ClientEntity client;
 
     @ManyToOne
     @JoinColumn(name = BOOK_ID_COLUMN, nullable = false)

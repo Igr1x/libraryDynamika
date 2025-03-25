@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.varnavskii.librarydynamika.repository.BookLoanRepository;
 import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 import ru.varnavskii.librarydynamika.repository.entity.BookLoanEntity;
-import ru.varnavskii.librarydynamika.repository.entity.UserEntity;
+import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
 import ru.varnavskii.librarydynamika.service.impl.BookLoanServiceImpl;
 
 import javax.persistence.EntityNotFoundException;
@@ -36,23 +36,23 @@ public class BookLoanServiceTest {
     private BookService bookService;
 
     @Mock
-    private UserService userService;
+    private ClientService clientService;
 
     @InjectMocks
     private BookLoanServiceImpl bookLoanService;
 
-    private final static Long USER_UD = 1L;
+    private final static Long CLIENT_UD = 1L;
     private final static Long BOOK_ID = 1L;
     private final static Long BOOK_LOAN_ID = 1L;
 
-    private UserEntity user;
+    private ClientEntity client;
     private BookEntity book;
     private BookLoanEntity bookLoanEntity;
 
     @BeforeEach
     void setUp() {
-        user = UserEntity.builder()
-            .id(USER_UD)
+        client = ClientEntity.builder()
+            .id(CLIENT_UD)
             .birthDate(LocalDate.of(2003, 1, 5))
             .firstName("SomeFirstName")
             .lastName("SomeLastName")
@@ -66,7 +66,7 @@ public class BookLoanServiceTest {
 
         bookLoanEntity = BookLoanEntity.builder()
             .id(BOOK_LOAN_ID)
-            .user(user)
+            .client(client)
             .book(book)
             .borrowedAt(LocalDate.now())
             .build();
@@ -74,14 +74,14 @@ public class BookLoanServiceTest {
 
     @Test
     void testTakeBookSuccess() {
-        when(userService.getUserOrThrowException(USER_UD)).thenReturn(user);
+        when(clientService.getClientOrThrowException(CLIENT_UD)).thenReturn(client);
         when(bookService.getBookOrThrowException(BOOK_ID)).thenReturn(book);
         when(bookLoanRepository.save(Mockito.any(BookLoanEntity.class))).thenReturn(bookLoanEntity);
 
-        BookLoanEntity result = bookLoanService.takeBook(USER_UD, BOOK_ID);
+        BookLoanEntity result = bookLoanService.takeBook(CLIENT_UD, BOOK_ID);
 
         assertNotNull(result);
-        assertEquals(user, result.getUser());
+        assertEquals(client, result.getClient());
         assertEquals(book, result.getBook());
         assertNotNull(result.getBorrowedAt());
         verify(bookLoanRepository, times(1)).save(Mockito.any(BookLoanEntity.class));
@@ -89,10 +89,10 @@ public class BookLoanServiceTest {
 
     @Test
     void testTakeBookUserNotFound() {
-        when(userService.getUserOrThrowException(USER_UD)).thenThrow(new EntityNotFoundException("User not found"));
+        when(clientService.getClientOrThrowException(CLIENT_UD)).thenThrow(new EntityNotFoundException("User not found"));
 
         Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            bookLoanService.takeBook(USER_UD, BOOK_ID);
+            bookLoanService.takeBook(CLIENT_UD, BOOK_ID);
         });
 
         assertTrue(exception.getMessage().contains("User not found"));
@@ -100,11 +100,11 @@ public class BookLoanServiceTest {
 
     @Test
     void testTakeBookBookNotFound() {
-        when(userService.getUserOrThrowException(USER_UD)).thenReturn(user);
+        when(clientService.getClientOrThrowException(CLIENT_UD)).thenReturn(client);
         when(bookService.getBookOrThrowException(BOOK_ID)).thenThrow(new EntityNotFoundException("Book not found"));
 
         Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            bookLoanService.takeBook(USER_UD, BOOK_ID);
+            bookLoanService.takeBook(CLIENT_UD, BOOK_ID);
         });
 
         assertTrue(exception.getMessage().contains("Book not found"));

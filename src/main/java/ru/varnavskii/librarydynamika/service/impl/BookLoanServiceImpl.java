@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.varnavskii.librarydynamika.repository.BookLoanRepository;
 import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 import ru.varnavskii.librarydynamika.repository.entity.BookLoanEntity;
-import ru.varnavskii.librarydynamika.repository.entity.UserEntity;
+import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
 import ru.varnavskii.librarydynamika.service.BookLoanService;
 import ru.varnavskii.librarydynamika.service.BookService;
-import ru.varnavskii.librarydynamika.service.UserService;
+import ru.varnavskii.librarydynamika.service.ClientService;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -22,7 +22,7 @@ public class BookLoanServiceImpl implements BookLoanService {
 
     private final BookLoanRepository bookLoanRepository;
     private final BookService bookService;
-    private final UserService userService;
+    private final ClientService clientService;
 
     @Override
     public BookLoanEntity findBookLoanOrThrowException(long id) {
@@ -31,11 +31,11 @@ public class BookLoanServiceImpl implements BookLoanService {
     }
 
     @Override
-    public BookLoanEntity takeBook(long userId, long bookId) {
-        UserEntity user = userService.getUserOrThrowException(userId);
+    public BookLoanEntity takeBook(long clientId, long bookId) {
+        ClientEntity client = clientService.getClientOrThrowException(clientId);
         BookEntity book = bookService.getBookOrThrowException(bookId);
         BookLoanEntity bookLoanEntity = BookLoanEntity.builder()
-            .user(user)
+            .client(client)
             .book(book)
             .borrowedAt(LocalDate.now())
             .build();

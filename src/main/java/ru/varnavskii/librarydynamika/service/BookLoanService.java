@@ -6,7 +6,7 @@ public interface BookLoanService {
 
     BookLoanEntity findBookLoanOrThrowException(long id);
 
-    BookLoanEntity takeBook(long userId, long bookId);
+    BookLoanEntity takeBook(long clientId, long bookId);
 
     BookLoanEntity returnBook(long id);
 }
