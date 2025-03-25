@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import java.time.LocalDate;
@@ -21,19 +23,25 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "book_loans")
+public class BookLoanEntity {
+    private static final String CLIENT_ID_COLUMN = "client_id";
+    private static final String BOOK_ID_COLUMN = "book_id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String firstName;
+    @ManyToOne
+    @JoinColumn(name = CLIENT_ID_COLUMN, nullable = false)
+    private ClientEntity client;
+
+    @ManyToOne
+    @JoinColumn(name = BOOK_ID_COLUMN, nullable = false)
+    private BookEntity book;
 
     @Column(nullable = false)
-    private String lastName;
+    private LocalDate borrowedAt;
 
-    private String patronymic;
-
-    private LocalDate birthDate;
+    private LocalDate returnedAt;
 }
