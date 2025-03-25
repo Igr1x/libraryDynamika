@@ -38,7 +38,7 @@
     <div>
         <label for="title">Название</label>
         <input type="text" id="title" th:field="*{title}" required />
-        <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
     </div>
     <div>
         <label for="author">Автор:</label>

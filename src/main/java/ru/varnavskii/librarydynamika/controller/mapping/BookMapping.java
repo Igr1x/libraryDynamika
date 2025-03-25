@@ -22,7 +22,7 @@ public class BookMapping {
             .id(bookEntity.getId())
             .title(bookEntity.getTitle())
             .author(bookEntity.getAuthor())
-            .title(String.format("ISBN-%s", bookEntity.getIsbn()))
+            .isbn(String.format("ISBN-%s", bookEntity.getIsbn()))
             .build();
     }
 }
