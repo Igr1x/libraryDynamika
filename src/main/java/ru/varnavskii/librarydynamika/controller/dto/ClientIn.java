@@ -3,6 +3,7 @@ package ru.varnavskii.librarydynamika.controller.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -11,14 +12,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ClientIn {
 
-    @NotNull(message = "")
+    public static final String FIRST_NAME_MESSAGE = "First name can't be null or empty";
+    public static final String LAST_NAME_MESSAGE = "Last name can't be null or empty";
+    public static final String BIRTH_DATE_MESSAGE = "Birth date can't be null";
+
+    @NotNull(message = FIRST_NAME_MESSAGE)
+    @NotEmpty(message = FIRST_NAME_MESSAGE)
     private String firstName;
 
-    @NotNull(message = "")
+    @NotNull(message = LAST_NAME_MESSAGE)
+    @NotEmpty(message = LAST_NAME_MESSAGE)
     private String lastName;
 
     private String patronymic;
 
-    @NotNull(message = "")
+    @NotNull(message = BIRTH_DATE_MESSAGE)
     private LocalDate birthDate;
 }
