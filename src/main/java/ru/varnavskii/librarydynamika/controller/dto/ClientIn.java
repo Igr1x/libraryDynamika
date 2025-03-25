@@ -3,6 +3,8 @@ package ru.varnavskii.librarydynamika.controller.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -27,5 +29,6 @@ public class ClientIn {
     private String patronymic;
 
     @NotNull(message = BIRTH_DATE_MESSAGE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 }

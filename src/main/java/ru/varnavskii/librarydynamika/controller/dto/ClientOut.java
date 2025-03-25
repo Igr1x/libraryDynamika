@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 @Data
@@ -13,8 +15,13 @@ import java.time.LocalDate;
 @Builder
 public class ClientOut {
     private long id;
+
     private String firstName;
+
     private String lastName;
+
     private String patronymic;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 }
