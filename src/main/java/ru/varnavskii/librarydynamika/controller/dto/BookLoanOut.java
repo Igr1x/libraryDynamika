@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
-import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
-
 import java.time.LocalDate;
 
 @Data
@@ -17,9 +14,9 @@ import java.time.LocalDate;
 public class BookLoanOut {
     private long id;
 
-    private ClientEntity client;
+    private ClientOut client;
 
-    private BookEntity book;
+    private BookOut book;
 
     private LocalDate taken;
 

@@ -1,4 +1,4 @@
-package ru.varnavskii.librarydynamika.service.IT.annotation;
+package ru.varnavskii.librarydynamika.IT.annotation;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
