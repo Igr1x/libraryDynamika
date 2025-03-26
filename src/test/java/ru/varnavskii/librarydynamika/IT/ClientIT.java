@@ -1,4 +1,4 @@
-package ru.varnavskii.librarydynamika.service.IT;
+package ru.varnavskii.librarydynamika.IT;
 
 import lombok.SneakyThrows;
 

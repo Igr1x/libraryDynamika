@@ -15,7 +15,6 @@ import ru.varnavskii.librarydynamika.service.ClientService;
 
 import javax.persistence.EntityNotFoundException;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service

@@ -1,4 +1,4 @@
-package ru.varnavskii.librarydynamika.service;
+package ru.varnavskii.librarydynamika;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,11 +8,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ru.varnavskii.librarydynamika.service.BookService;
+import ru.varnavskii.librarydynamika.service.ClientService;
+import ru.varnavskii.librarydynamika.service.impl.BookLoanServiceImpl;
 import ru.varnavskii.librarydynamika.repository.BookLoanRepository;
 import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 import ru.varnavskii.librarydynamika.repository.entity.BookLoanEntity;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
-import ru.varnavskii.librarydynamika.service.impl.BookLoanServiceImpl;
 
 import javax.persistence.EntityNotFoundException;
 
