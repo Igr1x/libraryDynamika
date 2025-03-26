@@ -35,10 +35,17 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class BookLoanController {
 
-    private static final String BOOK_LOANS_ATTRIBUTE = "bookLoans";
-    private static final String NEW_BOOK_LOAN_ATTRIBUTE = "newBookLoan";
     private static final String BOOK_LOAN_LIST_VIEW = "bookLoan/bookLoanList";
     private static final String BOOK_LOAN_CREATE_FORM = "bookLoan/bookLoanCreateRecord";
+
+    public static final String BOOK_LOANS_ATTRIBUTE = "bookLoans";
+    public static final String NEW_BOOK_LOAN_ATTRIBUTE = "newBookLoan";
+    public static final String BOOK_TOTAL_PAGES_ATTRIBUTE = "bookTotalPages";
+    public static final String BOOK_CURRENT_PAGE_ATTRIBUTE = "bookCurrentPage";
+    public static final String BOOK_SIZE_ATTRIBUTE = "bookSize";
+    public static final String BOOK_FILTER_IN_ATTRIBUTE = "bookFilterIn";
+    public static final String CLIENT_FILTER_IN_ATTRIBUTE = "clientFilterIn";
+    public static final String SIZE_ATTRIBUTE = "size";
 
     private final BookLoanService bookLoanService;
     private final ClientService clientService;
@@ -81,16 +88,16 @@ public class BookLoanController {
         Page<ClientEntity> clientsPage = clientService.getClients(specificationClients, PageRequest.of(page, size));
         Page<BookEntity> booksPage = bookService.getBooks(specificationBooks, PageRequest.of(page, size));
 
-        modelAndView.addObject("clients", clientsPage.getContent());
-        modelAndView.addObject("totalPages", clientsPage.getTotalPages());
-        modelAndView.addObject("currentPage", page);
-        modelAndView.addObject("size", size);
-        modelAndView.addObject("clientFilterIn", clientFilterIn);
-        modelAndView.addObject("books", booksPage.getContent());
-        modelAndView.addObject("bookTotalPages", booksPage.getTotalPages());
-        modelAndView.addObject("bookCurrentPage", page);
-        modelAndView.addObject("bookSize", size);
-        modelAndView.addObject("bookFilterIn", bookFilterIn);
+        modelAndView.addObject(ClientController.CLIENTS_ATTRIBUTE_NAME, clientsPage.getContent());
+        modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, clientsPage.getTotalPages());
+        modelAndView.addObject(PaginationUtils.CURRENT_PAGE_ATTRIBUTE, page);
+        modelAndView.addObject(SIZE_ATTRIBUTE, size);
+        modelAndView.addObject(CLIENT_FILTER_IN_ATTRIBUTE, clientFilterIn);
+        modelAndView.addObject(BookController.BOOKS_ATTRIBUTE_NAME, booksPage.getContent());
+        modelAndView.addObject(BOOK_TOTAL_PAGES_ATTRIBUTE, booksPage.getTotalPages());
+        modelAndView.addObject(BOOK_CURRENT_PAGE_ATTRIBUTE, page);
+        modelAndView.addObject(BOOK_SIZE_ATTRIBUTE, size);
+        modelAndView.addObject(BOOK_FILTER_IN_ATTRIBUTE, bookFilterIn);
         modelAndView.setViewName(BOOK_LOAN_CREATE_FORM);
         return modelAndView;
     }

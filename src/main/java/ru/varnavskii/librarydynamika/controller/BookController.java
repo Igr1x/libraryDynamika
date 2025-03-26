@@ -33,9 +33,10 @@ public class BookController {
 
     private static final String BOOK_LIST_VIEW = "book/bookList";
     private static final String BOOK_DETAIL_VIEW = "book/bookDetail";
-    private static final String BOOK_ATTRIBUTE_NAME = "book";
-    private static final String BOOKS_ATTRIBUTE_NAME = "books";
-    private static final String NEW_BOOK_ATTRIBUTE_NAME = "newBook";
+
+    public static final String BOOK_ATTRIBUTE_NAME = "book";
+    public static final String BOOKS_ATTRIBUTE_NAME = "books";
+    public static final String NEW_BOOK_ATTRIBUTE_NAME = "newBook";
 
     private final BookService bookService;
     private final BookMapper bookMapper;

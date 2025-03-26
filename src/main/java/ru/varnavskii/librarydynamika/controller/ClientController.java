@@ -37,9 +37,10 @@ public class ClientController {
 
     private static final String CLIENT_LIST_VIEW = "client/clientList";
     private static final String CLIENT_DETAIL_VIEW = "client/clientDetail";
-    private static final String CLIENT_ATTRIBUTE_NAME = "client";
-    private static final String CLIENTS_ATTRIBUTE_NAME = "clients";
-    private static final String NEW_CLIENT_ATTRIBUTE_NAME = "newClient";
+
+    public static final String CLIENT_ATTRIBUTE_NAME = "client";
+    public static final String CLIENTS_ATTRIBUTE_NAME = "clients";
+    public static final String NEW_CLIENT_ATTRIBUTE_NAME = "newClient";
 
     private final ClientService clientService;
     private final ClientMapper clientMapper;
