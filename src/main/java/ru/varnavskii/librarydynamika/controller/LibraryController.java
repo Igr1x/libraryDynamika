@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping(value = "/home", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class HomeController {
+public class LibraryController {
 
     @GetMapping
     public ModelAndView home(ModelAndView modelAndView) {
-        modelAndView.setViewName("home");
+        modelAndView.setViewName("library");
         return modelAndView;
     }
 }
