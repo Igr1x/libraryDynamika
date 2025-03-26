@@ -8,6 +8,7 @@ import ru.varnavskii.librarydynamika.controller.dto.BookLoanOut;
 import ru.varnavskii.librarydynamika.controller.dto.BookLoanOutShort;
 import ru.varnavskii.librarydynamika.controller.dto.BookOut;
 import ru.varnavskii.librarydynamika.controller.dto.ClientOut;
+import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 import ru.varnavskii.librarydynamika.repository.entity.BookLoanEntity;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
 
@@ -20,10 +21,16 @@ public class BookLoanMapper {
 
     public BookLoanOutShort toOutShort(BookLoanEntity bookLoanEntity) {
         ClientEntity client = bookLoanEntity.getClient();
+        BookEntity book = bookLoanEntity.getBook();
         return BookLoanOutShort.builder()
             .id(bookLoanEntity.getId())
-            .client(client.getFirstName() + client.getLastName())
-            .bookTitle(bookLoanEntity.getBook().getTitle())
+            .clientFirstName(client.getFirstName())
+            .clientLastName(client.getLastName())
+            .clientPatronymic(client.getPatronymic())
+            .clientBirthDate(client.getBirthDate())
+            .bookTitle(book.getTitle())
+            .bookAuthor(book.getAuthor())
+            .bookIsbn(book.getIsbn())
             .taken(bookLoanEntity.getBorrowedAt())
             .returned(bookLoanEntity.getReturnedAt())
             .build();

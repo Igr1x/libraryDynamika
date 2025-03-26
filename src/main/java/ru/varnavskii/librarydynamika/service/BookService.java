@@ -18,8 +18,6 @@ public interface BookService {
 
     void deleteBook(long id);
 
-    Page<BookEntity> getBooks(PageRequest pageRequest);
-
     void deleteByIds(List<Long> ids);
 
     Page<BookEntity> getBooks(Specification<BookEntity> specification, PageRequest pageRequest);

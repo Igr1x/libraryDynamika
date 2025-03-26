@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.varnavskii.librarydynamika.repository.ClientRepository;
@@ -40,12 +39,6 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public ClientEntity updateClient(ClientEntity client) {
         return clientRepository.save(client);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<ClientEntity> getClients(PageRequest pageRequest) {
-        return clientRepository.findAll(pageRequest);
     }
 
     @Override

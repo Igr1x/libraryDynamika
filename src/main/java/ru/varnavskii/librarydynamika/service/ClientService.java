@@ -17,8 +17,6 @@ public interface ClientService {
 
     ClientEntity updateClient(ClientEntity client);
 
-    Page<ClientEntity> getClients(PageRequest pageRequest);
-
     void deleteClient(long id);
 
     void deleteByIds(List<Long> ids);

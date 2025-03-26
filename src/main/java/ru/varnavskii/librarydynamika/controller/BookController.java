@@ -92,7 +92,7 @@ public class BookController {
                                    BindingResult result,
                                    ModelAndView modelAndView) {
         if (result.hasErrors()) {
-            modelAndView.addObject(BOOK_FILTER_IN_ATTRIBUTE, new BookFilterIn());
+            modelAndView.addObject(BOOK_FILTER_IN_ATTRIBUTE, new BookFilterIn(null, null, null));
             modelAndView.setViewName(BOOK_LIST_VIEW);
             return modelAndView;
         }

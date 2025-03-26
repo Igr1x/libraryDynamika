@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +16,6 @@ import ru.varnavskii.librarydynamika.service.BookLoanService;
 import ru.varnavskii.librarydynamika.service.BookService;
 import ru.varnavskii.librarydynamika.service.ClientService;
 
-import javax.persistence.EntityNotFoundException;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,13 +26,6 @@ public class BookLoanServiceImpl implements BookLoanService {
     private final BookLoanRepository bookLoanRepository;
     private final BookService bookService;
     private final ClientService clientService;
-
-    @Override
-    @Transactional(readOnly = true)
-    public BookLoanEntity findBookLoanOrThrowException(long id) {
-        return bookLoanRepository.findById(id).orElseThrow(() ->
-            new EntityNotFoundException(String.format("Book with id '%d' not found", id)));
-    }
 
     @Override
     @Transactional
@@ -50,19 +42,14 @@ public class BookLoanServiceImpl implements BookLoanService {
 
     @Override
     @Transactional
-    public BookLoanEntity returnBook(long id) {
-        BookLoanEntity existedBookLoan = findBookLoanOrThrowException(id);
-        existedBookLoan.setReturnedAt(LocalDate.now());
-        return bookLoanRepository.save(existedBookLoan);
+    public void returnBooks(List<Long> ids) {
+        bookLoanRepository.returnBooks(LocalDate.now(), ids);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<BookLoanEntity> getBookLoans(Pageable pageable, boolean returnedFilter) {
-        if (returnedFilter) {
-            return bookLoanRepository.findAll(pageable);
-        }
-        return bookLoanRepository.findAllByReturnedAtIsNull(pageable);
+    public Page<BookLoanEntity> getBookLoans(Specification<BookLoanEntity> specification, Pageable pageable, boolean returnedFilter) {
+        return bookLoanRepository.findAll(specification, pageable);
     }
 
     @Override

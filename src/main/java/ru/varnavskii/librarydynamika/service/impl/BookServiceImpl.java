@@ -48,12 +48,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<BookEntity> getBooks(PageRequest pageRequest) {
-        return bookRepository.findAll(pageRequest);
-    }
-
-    @Override
     @Transactional
     public void deleteByIds(List<Long> ids) {
         bookRepository.deleteAllById(ids);
