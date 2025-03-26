@@ -49,7 +49,6 @@ public class BookLoanController {
     public static final String BOOK_TOTAL_PAGES_ATTRIBUTE = "bookTotalPages";
     public static final String BOOK_CURRENT_PAGE_ATTRIBUTE = "bookCurrentPage";
     public static final String BOOK_SIZE_ATTRIBUTE = "bookSize";
-    public static final String BOOK_FILTER_IN_ATTRIBUTE = "bookFilterIn";
     public static final String SIZE_ATTRIBUTE = "size";
     public static final String SHOW_RETURNED_ATTRIBUTE = "showReturned";
 
@@ -108,7 +107,7 @@ public class BookLoanController {
         modelAndView.addObject(BOOK_TOTAL_PAGES_ATTRIBUTE, booksPage.getTotalPages());
         modelAndView.addObject(BOOK_CURRENT_PAGE_ATTRIBUTE, page);
         modelAndView.addObject(BOOK_SIZE_ATTRIBUTE, size);
-        modelAndView.addObject(BOOK_FILTER_IN_ATTRIBUTE, bookFilterIn);
+        modelAndView.addObject(BookController.BOOK_FILTER_IN_ATTRIBUTE, bookFilterIn);
         modelAndView.setViewName(BOOK_LOAN_CREATE_FORM);
         return modelAndView;
     }

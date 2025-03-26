@@ -38,11 +38,11 @@
 
 <h2>Поиск клиентов</h2>
 <form th:action="@{/client/list}" method="get">
-    <label>Имя: <input type="text" name="firstName" th:value="${clientFilterIn.firstName}"></label>
-    <label>Фамилия: <input type="text" name="lastName" th:value="${clientFilterIn.lastName}"></label>
-    <label>Отчество: <input type="text" name="patronymic" th:value="${clientFilterIn.patronymic}"></label>
-    <label>Дата рождения: <input type="date" name="birthDate" th:value="${clientFilterIn.birthDate}"></label>
-    <button type="submit">Поиск</button>
+    <div><label>Имя: <input type="text" name="firstName" th:value="${clientFilterIn.firstName}"></label></div>
+    <div><label>Фамилия: <input type="text" name="lastName" th:value="${clientFilterIn.lastName}"></label></div>
+    <div><label>Отчество: <input type="text" name="patronymic" th:value="${clientFilterIn.patronymic}"></label></div>
+    <div><label>Дата рождения: <input type="date" name="birthDate" th:value="${clientFilterIn.birthDate}"></label></div>
+    <div><button type="submit">Поиск</button></div>
 </form>
 
 <div th:if="${clients != null and clients.size() > 0}">
@@ -62,12 +62,23 @@
     <p>Клиенты не найдены.</p>
 </div>
 
-<div class="pagination">
+<div>
     <a th:href="@{/client/list(page=0)}">Первая</a>
-    <a th:href="@{/client/list(page=${currentPage - 1})}" th:if="${currentPage > 0}">Предыдущая</a>
-    <span>Страница <span th:text="${currentPage + 1}">1</span> из <span th:text="${totalPages}">1</span></span>
-    <a th:href="@{/client/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages - 1}">Следующая</a>
-    <a th:href="@{/client/list(page=${totalPages - 1})}" th:if="${totalPages > 1}">Последняя</a>
+    <a th:href="@{/client/list(page=${(currentPage != null and currentPage > 0) ? currentPage - 1 : 0})}"
+       th:if="${currentPage != null and currentPage > 0}">
+        Предыдущая
+    </a>
+    <span>Страница
+        <span th:text="${(currentPage != null) ? currentPage + 1 : 1}">1</span>
+    </span>
+    <a th:href="@{/client/list(page=${(currentPage != null and totalPages != null and currentPage < totalPages - 1) ? currentPage + 1 : 0})}"
+       th:if="${currentPage != null and totalPages != null and currentPage < totalPages - 1}">
+        Следующая
+    </a>
+    <a th:href="@{/client/list(page=${(totalPages != null and totalPages > 1) ? totalPages - 1 : 0})}"
+       th:if="${totalPages != null and totalPages > 1}">
+        Последняя
+    </a>
 </div>
 
 <h2>Добавить клиента</h2>
