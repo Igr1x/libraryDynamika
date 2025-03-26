@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 
 import ru.varnavskii.librarydynamika.repository.entity.BookLoanEntity;
 
+import java.util.List;
+
 public interface BookLoanService {
 
     BookLoanEntity findBookLoanOrThrowException(long id);
@@ -15,4 +17,6 @@ public interface BookLoanService {
     BookLoanEntity returnBook(long id);
 
     Page<BookLoanEntity> getBookLoans(Pageable pageable, boolean returnedFilter);
+
+    List<BookLoanEntity> getAllBookLoansRecords();
 }

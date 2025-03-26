@@ -20,6 +20,7 @@ import ru.varnavskii.librarydynamika.common.utils.ClientFilterApplier;
 import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
 import ru.varnavskii.librarydynamika.controller.dto.BookFilterIn;
 import ru.varnavskii.librarydynamika.controller.dto.BookLoanIn;
+import ru.varnavskii.librarydynamika.controller.dto.BookLoanOut;
 import ru.varnavskii.librarydynamika.controller.dto.BookLoanOutShort;
 import ru.varnavskii.librarydynamika.controller.dto.ClientFilterIn;
 import ru.varnavskii.librarydynamika.controller.mapping.BookLoanMapper;
@@ -125,5 +126,13 @@ public class BookLoanController {
 
         modelAndView.setViewName("redirect:/bookLoan/list");
         return modelAndView;
+    }
+
+    @GetMapping("/report")
+    public List<BookLoanOut> getReport() {
+        List<BookLoanEntity> bookLoanEntities = bookLoanService.getAllBookLoansRecords();
+        return bookLoanEntities.stream()
+            .map(bookLoanMapper::toOut)
+            .collect(Collectors.toList());
     }
 }
