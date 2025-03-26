@@ -2,27 +2,56 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Client List</title>
+    <title>Список клиентов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            margin-bottom: 10px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+        .pagination a, .pagination span {
+            margin-right: 10px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-<h1>Все клиенты</h1>
-<div>
-    <a th:href="@{/client/list(page=0)}">Первая</a>
-    <a th:href="@{/client/list(page=${currentPage - 1})}" th:if="${currentPage > 0}">Предыдущая</a>
-    <span>Страница <span th:text="${currentPage != null ? currentPage + 1 : 1}">0</span></span>
-    <a th:href="@{/client/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages - 1}">Следующая</a>
-    <a th:href="@{/client/list(page=${totalPages - 1})}" th:if="${totalPages > 1}">Последняя</a>
-</div>
+<h1>Список клиентов</h1>
+
+<h2>Поиск клиентов</h2>
+<form th:action="@{/client/list}" method="get">
+    <label>Имя: <input type="text" name="firstName" th:value="${clientFilterIn.firstName}"></label>
+    <label>Фамилия: <input type="text" name="lastName" th:value="${clientFilterIn.lastName}"></label>
+    <label>Отчество: <input type="text" name="patronymic" th:value="${clientFilterIn.patronymic}"></label>
+    <label>Дата рождения: <input type="date" name="birthDate" th:value="${clientFilterIn.birthDate}"></label>
+    <button type="submit">Поиск</button>
+</form>
 
 <div th:if="${clients != null and clients.size() > 0}">
-    <h3>Имя, фамилия, дата рождения</h3>
+    <h3>Клиенты</h3>
     <form id="deleteForm" method="POST" action="/client/delete">
-        <input type="hidden" name="page" th:value="${currentPage}"/>
         <ul>
             <li th:each="client : ${clients}">
                 <input type="checkbox" th:value="${client.id}" name="idsToDelete"/>
-                <a th:href="@{/client/{id}(id=${client.id})}"
-                   th:text="${client.firstName} + ' ' + ${client.lastName} + ' ' + ${client.birthDate}"></a>
+                <a th:href="@{/client/{id}(id=${client.id})}" th:text="${client.firstName} + ' ' + ${client.lastName} + ' (' + ${client.birthDate} + ')'">Клиент</a>
             </li>
         </ul>
         <button type="submit">Удалить выбранные</button>
@@ -30,34 +59,43 @@
 </div>
 
 <div th:if="${clients == null or clients.size() == 0}">
-    <p>Клиенты не созданы.</p>
+    <p>Клиенты не найдены.</p>
+</div>
+
+<div class="pagination">
+    <a th:href="@{/client/list(page=0)}">Первая</a>
+    <a th:href="@{/client/list(page=${currentPage - 1})}" th:if="${currentPage > 0}">Предыдущая</a>
+    <span>Страница <span th:text="${currentPage + 1}">1</span> из <span th:text="${totalPages}">1</span></span>
+    <a th:href="@{/client/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages - 1}">Следующая</a>
+    <a th:href="@{/client/list(page=${totalPages - 1})}" th:if="${totalPages > 1}">Последняя</a>
 </div>
 
 <h2>Добавить клиента</h2>
 <form th:action="@{/client}" th:object="${newClient}" method="post">
     <div>
-        <label for="firstName">Имя:</label>
-        <input type="text" id="firstName" th:field="*{firstName}" required/>
-        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+        <label>Имя:</label>
+        <input type="text" th:field="*{firstName}" required/>
+        <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
     </div>
     <div>
-        <label for="lastName">Фамилия:</label>
-        <input type="text" id="lastName" th:field="*{lastName}" required/>
-        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+        <label>Фамилия:</label>
+        <input type="text" th:field="*{lastName}" required/>
+        <div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
     </div>
     <div>
-        <label for="patronymic">Отчетсво (опциально):</label>
-        <input type="text" id="patronymic" th:field="*{patronymic}"/>
+        <label>Отчество (опционально):</label>
+        <input type="text" th:field="*{patronymic}"/>
     </div>
     <div>
-        <label for="birthDate">Дата рождения:</label>
-        <input type="date" id="birthDate" th:field="*{birthDate}" required/>
-        <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
+        <label>Дата рождения:</label>
+        <input type="date" th:field="*{birthDate}" required/>
+        <div class="error" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
     </div>
     <div>
-        <button type="submit">Добавить клиента</button>
+        <button type="submit">Добавить</button>
     </div>
 </form>
+
 
 <a href="/">Вернуться на главную</a>
 </body>

@@ -50,7 +50,6 @@ public class BookLoanController {
     public static final String BOOK_CURRENT_PAGE_ATTRIBUTE = "bookCurrentPage";
     public static final String BOOK_SIZE_ATTRIBUTE = "bookSize";
     public static final String BOOK_FILTER_IN_ATTRIBUTE = "bookFilterIn";
-    public static final String CLIENT_FILTER_IN_ATTRIBUTE = "clientFilterIn";
     public static final String SIZE_ATTRIBUTE = "size";
     public static final String SHOW_RETURNED_ATTRIBUTE = "showReturned";
 
@@ -104,7 +103,7 @@ public class BookLoanController {
         modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, clientsPage.getTotalPages());
         modelAndView.addObject(PaginationUtils.CURRENT_PAGE_ATTRIBUTE, page);
         modelAndView.addObject(SIZE_ATTRIBUTE, size);
-        modelAndView.addObject(CLIENT_FILTER_IN_ATTRIBUTE, clientFilterIn);
+        modelAndView.addObject(ClientController.CLIENT_FILTER_IN_ATTRIBUTE, clientFilterIn);
         modelAndView.addObject(BookController.BOOKS_ATTRIBUTE_NAME, booksPage.getContent());
         modelAndView.addObject(BOOK_TOTAL_PAGES_ATTRIBUTE, booksPage.getTotalPages());
         modelAndView.addObject(BOOK_CURRENT_PAGE_ATTRIBUTE, page);
