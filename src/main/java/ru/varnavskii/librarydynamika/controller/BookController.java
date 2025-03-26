@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import ru.varnavskii.librarydynamika.common.utils.BookFilterApplier;
 import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
+import ru.varnavskii.librarydynamika.controller.dto.BookFilterIn;
 import ru.varnavskii.librarydynamika.controller.dto.BookIn;
 import ru.varnavskii.librarydynamika.controller.mapping.BookMapper;
 import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
@@ -37,19 +40,23 @@ public class BookController {
     public static final String BOOK_ATTRIBUTE_NAME = "book";
     public static final String BOOKS_ATTRIBUTE_NAME = "books";
     public static final String NEW_BOOK_ATTRIBUTE_NAME = "newBook";
+    public static final String BOOK_FILTER_IN_ATTRIBUTE = "bookFilterIn";
 
     private final BookService bookService;
     private final BookMapper bookMapper;
 
     @GetMapping("/list")
-    public ModelAndView getAllBooks(@RequestParam(defaultValue = "0") int page,
+    public ModelAndView getAllBooks(@ModelAttribute BookFilterIn bookFilterIn,
+                                    @RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size,
                                     ModelAndView modelAndView) {
-        Page<BookEntity> books = bookService.getBooks(PageRequest.of(page, size));
+        Specification<BookEntity> specificationBooks = BookFilterApplier.withFilters(bookFilterIn);
+        Page<BookEntity> booksPage = bookService.getBooks(specificationBooks, PageRequest.of(page, size));
 
-        modelAndView.addObject(BOOKS_ATTRIBUTE_NAME, books.getContent());
+        modelAndView.addObject(BOOKS_ATTRIBUTE_NAME, booksPage.getContent());
+        modelAndView.addObject(BOOK_FILTER_IN_ATTRIBUTE, bookFilterIn);
         modelAndView.addObject(PaginationUtils.CURRENT_PAGE_ATTRIBUTE, page);
-        modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, books.getTotalPages());
+        modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, booksPage.getTotalPages());
         modelAndView.addObject(NEW_BOOK_ATTRIBUTE_NAME, new BookIn(null, null, null));
         modelAndView.setViewName(BOOK_LIST_VIEW);
         return modelAndView;
@@ -85,6 +92,7 @@ public class BookController {
                                    BindingResult result,
                                    ModelAndView modelAndView) {
         if (result.hasErrors()) {
+            modelAndView.addObject(BOOK_FILTER_IN_ATTRIBUTE, new BookFilterIn(null, null, null));
             modelAndView.setViewName(BOOK_LIST_VIEW);
             return modelAndView;
         }

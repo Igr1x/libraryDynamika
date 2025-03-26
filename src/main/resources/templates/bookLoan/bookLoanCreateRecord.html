@@ -19,9 +19,9 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('clientSelectionForm');
-            form.addEventListener('submit', function(event) {
+            form.addEventListener('submit', function (event) {
                 if (!validateSelection()) {
                     event.preventDefault();
                 }
@@ -58,6 +58,27 @@
     <button type="submit">Поиск по клиентам</button>
 </form>
 
+<h2>Поиск по книгам</h2>
+<form th:action="@{/bookLoan/addRecord}" method="get">
+    <label for="title">Название книги</label>
+    <input type="text" id="title" name="title" th:value="${bookFilterIn.title}">
+    <label for="author">Автор</label>
+    <input type="text" id="author" name="author" th:value="${bookFilterIn.author}">
+    <label for="isbn">ISBN</label>
+    <input type="text" id="isbn" name="isbn" th:value="${bookFilterIn.isbn}">
+
+    <input type="hidden" name="page" th:value="${currentPage}">
+    <input type="hidden" name="size" th:value="${size}">
+    <input type="hidden" name="clientPage" th:value="${clientCurrentPage}">
+    <input type="hidden" name="clientSize" th:value="${clientSize}">
+    <input type="hidden" name="firstName" th:value="${clientFilterIn.firstName}">
+    <input type="hidden" name="lastName" th:value="${clientFilterIn.lastName}">
+    <input type="hidden" name="patronymic" th:value="${clientFilterIn.patronymic}">
+    <input type="hidden" name="birthDate" th:value="${clientFilterIn.birthDate}">
+
+    <button type="submit">Поиск по книгам</button>
+</form>
+
 <form id="clientSelectionForm" action="/bookLoan/takeBook" method="post">
     <h2>Список клиентов</h2>
     <table border="1">
@@ -84,70 +105,32 @@
         </tbody>
     </table>
 
-    <h2>Поиск по книгам</h2>
-    <form th:action="@{/bookLoan/addRecord}" method="get">
-        <label for="title">Название книги</label>
-        <input type="text" id="title" name="title" th:value="${bookFilterIn.title}">
-        <label for="author">Автор</label>
-        <input type="text" id="author" name="author" th:value="${bookFilterIn.author}">
-        <label for="isbn">ISBN</label>
-        <input type="text" id="isbn" name="isbn" th:value="${bookFilterIn.isbn}">
+    <h2>Список книг</h2>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Дата публикации</th>
+            <th>Выбор</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.isbn}"></td>
+            <td>
+                <input type="radio" name="bookId" th:value="${book.id}" th:id="'book_' + ${book.id}">
+                <label th:for="'book_' + ${book.id}">Выбрать</label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="submit">Создать запись</button>
+</form>
 
-        <input type="hidden" name="page" th:value="${currentPage}">
-        <input type="hidden" name="size" th:value="${size}">
-        <input type="hidden" name="clientPage" th:value="${clientCurrentPage}">
-        <input type="hidden" name="clientSize" th:value="${clientSize}">
-        <input type="hidden" name="firstName" th:value="${clientFilterIn.firstName}">
-        <input type="hidden" name="lastName" th:value="${clientFilterIn.lastName}">
-        <input type="hidden" name="patronymic" th:value="${clientFilterIn.patronymic}">
-        <input type="hidden" name="birthDate" th:value="${clientFilterIn.birthDate}">
 
-    <h2>Поиск по книгам</h2>
-    <form th:action="@{/bookLoan/addRecord}" method="get">
-        <label for="title">Название книги</label>
-        <input type="text" id="title" name="title" th:value="${bookFilterIn.title}">
-        <label for="author">Автор</label>
-        <input type="text" id="author" name="author" th:value="${bookFilterIn.author}">
-        <label for="isbn">ISBN</label>
-        <input type="text" id="isbn" name="isbn" th:value="${bookFilterIn.isbn}">
-
-        <input type="hidden" name="page" th:value="${currentPage}">
-        <input type="hidden" name="size" th:value="${size}">
-        <input type="hidden" name="clientPage" th:value="${clientCurrentPage}">
-        <input type="hidden" name="clientSize" th:value="${clientSize}">
-        <input type="hidden" name="firstName" th:value="${clientFilterIn.firstName}">
-        <input type="hidden" name="lastName" th:value="${clientFilterIn.lastName}">
-        <input type="hidden" name="patronymic" th:value="${clientFilterIn.patronymic}">
-        <input type="hidden" name="birthDate" th:value="${clientFilterIn.birthDate}">
-
-        <h2>Список книг</h2>
-        <table border="1">
-            <thead>
-            <tr>
-                <th>Название</th>
-                <th>Автор</th>
-                <th>Дата публикации</th>
-                <th>Выбор</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="book : ${books}">
-                <td th:text="${book.title}"></td>
-                <td th:text="${book.author}"></td>
-                <td th:text="${book.isbn}"></td>
-                <td>
-                    <input type="radio" name="bookId" th:value="${book.id}" th:id="'book_' + ${book.id}">
-                    <label th:for="'book_' + ${book.id}">Выбрать</label>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <button type="submit">Создать запись</button>
-    </form>
-
-    <div id="message"></div>
-
-        <a href="/">Вернуться на главную</a>
+<a href="/">Вернуться на главную</a>
 </body>
 </html>

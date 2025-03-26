@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import ru.varnavskii.librarydynamika.common.utils.ClientFilterApplier;
 import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
+import ru.varnavskii.librarydynamika.controller.dto.ClientFilterIn;
 import ru.varnavskii.librarydynamika.controller.dto.ClientIn;
 import ru.varnavskii.librarydynamika.controller.mapping.ClientMapper;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
@@ -38,19 +41,23 @@ public class ClientController {
     public static final String CLIENT_ATTRIBUTE_NAME = "client";
     public static final String CLIENTS_ATTRIBUTE_NAME = "clients";
     public static final String NEW_CLIENT_ATTRIBUTE_NAME = "newClient";
+    public static final String CLIENT_FILTER_IN_ATTRIBUTE = "clientFilterIn";
 
     private final ClientService clientService;
     private final ClientMapper clientMapper;
 
     @GetMapping("/list")
-    public ModelAndView getAllClients(@RequestParam(defaultValue = "0") int page,
+    public ModelAndView getAllClients(@ModelAttribute ClientFilterIn clientFilterIn,
+                                      @RequestParam(defaultValue = "0") int page,
                                       @RequestParam(defaultValue = "10") int size,
                                       ModelAndView modelAndView) {
-        Page<ClientEntity> clients = clientService.getClients(PageRequest.of(page, size));
+        Specification<ClientEntity> specificationClients = ClientFilterApplier.withFilters(clientFilterIn);
+        Page<ClientEntity> clientsPage = clientService.getClients(specificationClients, PageRequest.of(page, size));
 
-        modelAndView.addObject(CLIENTS_ATTRIBUTE_NAME, clients.getContent());
+        modelAndView.addObject(ClientController.CLIENT_FILTER_IN_ATTRIBUTE, clientFilterIn);
+        modelAndView.addObject(CLIENTS_ATTRIBUTE_NAME, clientsPage.getContent());
         modelAndView.addObject(PaginationUtils.CURRENT_PAGE_ATTRIBUTE, page);
-        modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, clients.getTotalPages());
+        modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, clientsPage.getTotalPages());
         modelAndView.addObject(NEW_CLIENT_ATTRIBUTE_NAME, new ClientIn(null, null, null, null));
         modelAndView.setViewName(CLIENT_LIST_VIEW);
         return modelAndView;

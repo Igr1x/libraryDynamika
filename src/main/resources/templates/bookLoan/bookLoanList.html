@@ -2,46 +2,83 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Book loan List</title>
+    <title>Список записей о взятых книгаъ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            margin: 5px 0;
+            padding: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        .pagination a, .pagination span {
+            margin-right: 10px;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-<h1>Все записи</h1>
+<h1>Все записи о взятых книгах</h1>
 
-<form method="get" action="/bookLoan/list">
+<h2>Поиск по записям</h2>
+<form th:action="@{/bookLoan/list}" method="get">
+    <div><label>Фамилия клиента: <input type="text" name="clientFirstName" th:value="${bookLoanFilterIn.clientFirstName}"></label></div>
+    <div><label>Имя клиента: <input type="text" name="clientLastName" th:value="${bookLoanFilterIn.clientLastName}"></label></div>
+    <div><label>Отчество клиента: <input type="text" name="clientPatronymic" th:value="${bookLoanFilterIn.clientPatronymic}"></label></div>
+    <div><label>Дата рождения клиента: <input type="date" name="clientBirthDate" th:value="${bookLoanFilterIn.clientBirthDate}"></label></div>
+    <div><label>Название книги: <input type="text" name="bookTitle" th:value="${bookLoanFilterIn.bookTitle}"></label></div>
+    <div><label>Автор книги: <input type="text" name="bookAuthor" th:value="${bookLoanFilterIn.bookAuthor}"></label></div>
+    <div><label>ISBN книги: <input type="text" name="bookIsbn" th:value="${bookLoanFilterIn.bookIsbn}"></label></div>
+    <div><label>Дата получения книги: <input type="date" name="takenDate" th:value="${bookLoanFilterIn.takenDate}"></label></div>
     <input type="hidden" name="page" value="0"/>
-    <label>
-        <input type="checkbox" name="showReturned" value="true" th:checked="${showReturned}"/>
-        Показать возвращенные книги
-    </label>
+    <label><input type="checkbox" name="showClosedRecords" th:checked="${bookLoanFilterIn.showClosedRecords}"/>Показать возвращенные
+        книги</label>
     <div>
-        <button type="submit">Применить</button>
+        <button type="submit">Поиск</button>
     </div>
 </form>
 
-<a th:href="@{/bookLoan/list(page=0, showReturned=${showReturned})}">Первая</a>
-<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage - 1 : 0}, showReturned=${showReturned})}" th:if="${currentPage != null and currentPage > 0}">Предыдущая</a>
-<span>Страница <span th:text="${currentPage != null ? currentPage + 1 : 1}">0</span></span>
-<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage + 1 : 0}, showReturned=${showReturned})}" th:if="${currentPage != null and currentPage < totalPages - 1}">Следующая</a>
-<a th:href="@{/bookLoan/list(page=${totalPages != null && totalPages > 1 ? totalPages - 1 : 0}, showReturned=${showReturned})}" th:if="${totalPages != null and totalPages > 1}">Последняя</a>
-
 <div th:if="${bookLoans != null and bookLoans.size() > 0}">
-    <h3>Клиент, название книги, дата взятия</h3>
-    <form id="returnForm" method="POST">
+    <h3>Клиент, название книги, дата</h3>
+    <form id="returnForm" method="POST" action="/bookLoan/returnBook">
         <input type="hidden" name="page" th:value="${currentPage}"/>
         <input type="hidden" name="showReturned" th:value="${showReturned}"/>
         <ul>
             <li th:each="bookLoan : ${bookLoans}">
-                <span th:text="${bookLoan.client} + ', ' + ${bookLoan.bookTitle} + ', ' + ${bookLoan.taken}"></span>
+                <input type="checkbox" th:value="${bookLoan.id}" name="idsToReturn" th:if="${bookLoan.returned == null}">
+                <span
+                    th:text="'Данные о клиенте - ' + ${bookLoan.clientFirstName} + ' ' + ${bookLoan.clientLastName} + ' ' + ${bookLoan.clientPatronymic} + ', название книги - ' + ${bookLoan.bookTitle} + ', isbn - ' + ${bookLoan.bookIsbn}"></span>
                 <div th:if="${bookLoan.returned != null}">
                     <span th:text="'Дата возврата: ' + ${bookLoan.returned}"></span>
                 </div>
-                <div th:if="${bookLoan.returned == null}">
-                    <button type="submit" th:formaction="@{/bookLoan/returnBook/{id}(id=${bookLoan.id}, page=${currentPage}, showReturned=${showReturned != null ? showReturned : false})}">
-                        Вернуть книгу
-                    </button>
-                </div>
             </li>
         </ul>
+        <div>
+            <button type="submit">Отметить отмеченные записи, как возврат книг</button>
+        </div>
     </form>
 </div>
 
@@ -49,6 +86,17 @@
 <div th:if="${bookLoans == null or bookLoans.size() == 0}">
     <p>Записи отсутствуют</p>
 </div>
+
+<a th:href="@{/bookLoan/list(page=0, showReturned=${showReturned})}">Первая</a>
+<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage - 1 : 0}, showReturned=${showReturned})}"
+   th:if="${currentPage != null and currentPage > 0}">Предыдущая</a>
+<span>Страница <span th:text="${currentPage != null ? currentPage + 1 : 1}">0</span></span>
+<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage + 1 : 0}, showReturned=${showReturned})}"
+   th:if="${currentPage != null and currentPage < totalPages - 1}">Следующая</a>
+<a th:href="@{/bookLoan/list(page=${totalPages != null && totalPages > 1 ? totalPages - 1 : 0}, showReturned=${showReturned})}"
+   th:if="${totalPages != null and totalPages > 1}">Последняя</a>
+
+
 <div>
     <a href="/bookLoan/addRecord">Создать запись</a>
 </div>

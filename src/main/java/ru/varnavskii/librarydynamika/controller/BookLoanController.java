@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import ru.varnavskii.librarydynamika.common.utils.BookFilterApplier;
+import ru.varnavskii.librarydynamika.common.utils.BookLoanFilterApplier;
 import ru.varnavskii.librarydynamika.common.utils.ClientFilterApplier;
 import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
 import ru.varnavskii.librarydynamika.controller.dto.BookFilterIn;
+import ru.varnavskii.librarydynamika.controller.dto.BookLoanFilterIn;
 import ru.varnavskii.librarydynamika.controller.dto.BookLoanIn;
 import ru.varnavskii.librarydynamika.controller.dto.BookLoanOut;
 import ru.varnavskii.librarydynamika.controller.dto.BookLoanOutShort;
@@ -45,12 +46,11 @@ public class BookLoanController {
     private static final String BOOK_LOAN_CREATE_FORM = "bookLoan/bookLoanCreateRecord";
 
     public static final String BOOK_LOANS_ATTRIBUTE = "bookLoans";
+    public static final String BOOK_LOAN_FILTER_ATTRIBUTE = "bookLoanFilterIn";
     public static final String NEW_BOOK_LOAN_ATTRIBUTE = "newBookLoan";
     public static final String BOOK_TOTAL_PAGES_ATTRIBUTE = "bookTotalPages";
     public static final String BOOK_CURRENT_PAGE_ATTRIBUTE = "bookCurrentPage";
     public static final String BOOK_SIZE_ATTRIBUTE = "bookSize";
-    public static final String BOOK_FILTER_IN_ATTRIBUTE = "bookFilterIn";
-    public static final String CLIENT_FILTER_IN_ATTRIBUTE = "clientFilterIn";
     public static final String SIZE_ATTRIBUTE = "size";
     public static final String SHOW_RETURNED_ATTRIBUTE = "showReturned";
 
@@ -60,16 +60,19 @@ public class BookLoanController {
     private final BookLoanMapper bookLoanMapper;
 
     @GetMapping("/list")
-    public ModelAndView getBookLoan(@RequestParam(defaultValue = "0") int page,
+    public ModelAndView getBookLoan(@ModelAttribute BookLoanFilterIn bookLoanFilterIn,
+                                    @RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size,
                                     @RequestParam(defaultValue = "false") boolean showReturned,
                                     ModelAndView modelAndView) {
-        Page<BookLoanEntity> bookLoanEntities = bookLoanService.getBookLoans(PageRequest.of(page, size), showReturned);
+        Specification<BookLoanEntity> specification = BookLoanFilterApplier.withFilters(bookLoanFilterIn);
+        Page<BookLoanEntity> bookLoanEntities = bookLoanService.getBookLoans(specification, PageRequest.of(page, size), showReturned);
         List<BookLoanOutShort> records = bookLoanEntities.getContent().stream()
             .map(bookLoanMapper::toOutShort)
             .collect(Collectors.toList());
 
         modelAndView.addObject(BOOK_LOANS_ATTRIBUTE, records);
+        modelAndView.addObject(BOOK_LOAN_FILTER_ATTRIBUTE, bookLoanFilterIn);
         modelAndView.addObject(PaginationUtils.CURRENT_PAGE_ATTRIBUTE, page);
         modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, bookLoanEntities.getTotalPages());
         modelAndView.addObject(NEW_BOOK_LOAN_ATTRIBUTE, new BookLoanIn(null, null));
@@ -78,12 +81,12 @@ public class BookLoanController {
         return modelAndView;
     }
 
-    @PostMapping("/returnBook/{id}")
-    public ModelAndView returnBook(@PathVariable Long id,
-                                   @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "false") boolean showReturned,
-                                   ModelAndView modelAndView) {
-        bookLoanService.returnBook(id);
+    @PostMapping("/returnBook")
+    public ModelAndView returnBooks(@RequestParam List<Long> idsToReturn,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "false") boolean showReturned,
+                                    ModelAndView modelAndView) {
+        bookLoanService.returnBooks(idsToReturn);
 
         modelAndView.setViewName("redirect:/bookLoan/list?page=" + page + "&showReturned=" + showReturned);
         return modelAndView;
@@ -104,12 +107,12 @@ public class BookLoanController {
         modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, clientsPage.getTotalPages());
         modelAndView.addObject(PaginationUtils.CURRENT_PAGE_ATTRIBUTE, page);
         modelAndView.addObject(SIZE_ATTRIBUTE, size);
-        modelAndView.addObject(CLIENT_FILTER_IN_ATTRIBUTE, clientFilterIn);
+        modelAndView.addObject(ClientController.CLIENT_FILTER_IN_ATTRIBUTE, clientFilterIn);
         modelAndView.addObject(BookController.BOOKS_ATTRIBUTE_NAME, booksPage.getContent());
         modelAndView.addObject(BOOK_TOTAL_PAGES_ATTRIBUTE, booksPage.getTotalPages());
         modelAndView.addObject(BOOK_CURRENT_PAGE_ATTRIBUTE, page);
         modelAndView.addObject(BOOK_SIZE_ATTRIBUTE, size);
-        modelAndView.addObject(BOOK_FILTER_IN_ATTRIBUTE, bookFilterIn);
+        modelAndView.addObject(BookController.BOOK_FILTER_IN_ATTRIBUTE, bookFilterIn);
         modelAndView.setViewName(BOOK_LOAN_CREATE_FORM);
         return modelAndView;
     }
