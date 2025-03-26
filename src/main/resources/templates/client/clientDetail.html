@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Details</title>
+    <script>
+        function deleteClient(clientId) {
+            if (confirm("Вы уверены, что хотите удалить клиента?")) {
+                fetch(`/client/${clientId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        alert("Клиент удален!");
+                        window.location.href = "/client/list";
+                    } else {
+                        alert("Ошибка при удалении клиента!");
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Клиент</h1>
+<form th:action="@{/client/{id}(id=${client.id})}" th:object="${client}" method="post">
+    <div>
+        <label for="firstName">Имя:</label>
+        <input type="text" id="firstName" th:field="*{firstName}" required/>
+        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+    </div>
+    <div>
+        <label for="lastName">Фамилия:</label>
+        <input type="text" id="lastName" th:field="*{lastName}" required/>
+        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+    </div>
+    <div>
+        <label for="patronymic">Отчетсво (опциально):</label>
+        <input type="text" id="patronymic" th:field="*{patronymic}"/>
+    </div>
+    <div>
+        <label for="birthDate">Дата рождения:</label>
+        <input type="date" id="birthDate" th:field="*{birthDate}" required/>
+        <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
+    </div>
+    <div>
+        <button type="submit">Обновить</button>
+    </div>
+</form>
+
+<div>
+    <button type="button" th:attr="onclick='deleteClient(' + ${client.id} + ')'" style="color: red;">
+        Удалить клиента
+    </button>
+</div>
+
+<a href="/client/list">Вернуться к списку клиентов</a>
+</body>
+</html>

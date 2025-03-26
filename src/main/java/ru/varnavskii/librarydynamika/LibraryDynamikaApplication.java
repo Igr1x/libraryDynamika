@@ -1,13 +1,13 @@
-package ru.varnavskii.librarydynamica;
+package ru.varnavskii.librarydynamika;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LibraryDynamicaApplication {
+public class LibraryDynamikaApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(LibraryDynamicaApplication.class, args);
+        SpringApplication.run(LibraryDynamikaApplication.class, args);
     }
 
 }
