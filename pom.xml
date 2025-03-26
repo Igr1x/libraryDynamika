@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.varnavskii</groupId>
     <artifactId>libraryDynamika</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>libraryDynamika</name>
     <description>libraryDynamika</description>
     <url/>
@@ -112,7 +112,6 @@
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.36</version>
                         </exclude>
                     </excludes>
                 </configuration>
