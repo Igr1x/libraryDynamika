@@ -1,25 +1,22 @@
 package ru.varnavskii.librarydynamika.controller.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-@Builder
-public class BookLoanOutShort {
-    private long id;
-
+public class BookLoanFilterIn {
     private String clientFirstName;
 
     private String clientLastName;
 
     private String clientPatronymic;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate clientBirthDate;
 
     private String bookTitle;
@@ -28,7 +25,8 @@ public class BookLoanOutShort {
 
     private String bookIsbn;
 
-    private LocalDate taken;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate takenDate;
 
-    private LocalDate returned;
+    private String showClosedRecords;
 }

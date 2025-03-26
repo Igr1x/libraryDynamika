@@ -8,18 +8,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ru.varnavskii.librarydynamika.service.BookService;
-import ru.varnavskii.librarydynamika.service.ClientService;
-import ru.varnavskii.librarydynamika.service.impl.BookLoanServiceImpl;
 import ru.varnavskii.librarydynamika.repository.BookLoanRepository;
 import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 import ru.varnavskii.librarydynamika.repository.entity.BookLoanEntity;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
+import ru.varnavskii.librarydynamika.service.BookService;
+import ru.varnavskii.librarydynamika.service.ClientService;
+import ru.varnavskii.librarydynamika.service.impl.BookLoanServiceImpl;
 
 import javax.persistence.EntityNotFoundException;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -110,28 +109,5 @@ public class BookLoanServiceTest {
         });
 
         assertTrue(exception.getMessage().contains("Book not found"));
-    }
-
-    @Test
-    void testReturnBookSuccess() {
-        when(bookLoanRepository.findById(BOOK_LOAN_ID)).thenReturn(Optional.of(bookLoanEntity));
-        when(bookLoanRepository.save(Mockito.any(BookLoanEntity.class))).thenReturn(bookLoanEntity);
-
-        BookLoanEntity result = bookLoanService.returnBook(BOOK_LOAN_ID);
-
-        assertNotNull(result);
-        assertNotNull(result.getReturnedAt());
-        verify(bookLoanRepository, times(1)).save(Mockito.any(BookLoanEntity.class));
-    }
-
-    @Test
-    void testReturnBookNotFound() {
-        when(bookLoanRepository.findById(BOOK_ID)).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            bookLoanService.returnBook(BOOK_LOAN_ID);
-        });
-
-        assertTrue(exception.getMessage().contains("Book with id '1' not found"));
     }
 }

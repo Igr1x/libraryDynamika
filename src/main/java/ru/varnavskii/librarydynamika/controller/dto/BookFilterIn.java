@@ -10,5 +10,5 @@ public class BookFilterIn {
 
     private String author;
 
-    private String isbn ;
+    private String isbn;
 }

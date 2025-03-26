@@ -3,6 +3,8 @@ package ru.varnavskii.librarydynamika.controller.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 @Getter
@@ -14,5 +16,6 @@ public class ClientFilterIn {
 
     private String patronymic;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 }
