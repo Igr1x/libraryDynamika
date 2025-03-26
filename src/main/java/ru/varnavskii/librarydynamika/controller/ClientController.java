@@ -118,20 +118,4 @@ public class ClientController {
         return modelAndView;
     }
 
-    @GetMapping
-    public ModelAndView getClientsWithFilter(@ModelAttribute ClientFilterIn clientFilterIn,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "10") int size,
-                                             ModelAndView modelAndView) {
-        Specification<ClientEntity> specification = ClientFilterApplier.withFilters(clientFilterIn);
-        Page<ClientEntity> clientsPage = clientService.getClients(specification, PageRequest.of(page, size));
-        modelAndView.addObject("clients", clientsPage.getContent()); // Список клиентов
-        modelAndView.addObject("totalPages", clientsPage.getTotalPages()); // Общее количество страниц
-        modelAndView.addObject("currentPage", page); // Текущая страница
-        modelAndView.addObject("size", size); // Размер страницы
-        modelAndView.addObject("clientFilterIn", clientFilterIn); // Передаем объект фильтра для повторного использования
-        modelAndView.setViewName("client/list"); // Название представления
-        return modelAndView;
-    }
-
 }
