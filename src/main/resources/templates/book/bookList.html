@@ -34,7 +34,7 @@
 </div>
 
 <h2>Добавить книги</h2>
-<form th:action="@{/templates/book}" th:object="${newBook}" method="post">
+<form th:action="@{/book}" th:object="${newBook}" method="post">
     <div>
         <label for="title">Название</label>
         <input type="text" id="title" th:field="*{title}" required />

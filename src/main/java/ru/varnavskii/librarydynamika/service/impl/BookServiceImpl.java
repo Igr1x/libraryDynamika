@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import ru.varnavskii.librarydynamika.repository.BookRepository;
@@ -49,5 +50,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteByIds(List<Long> ids) {
         bookRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public Page<BookEntity> getBooks(Specification<BookEntity> specification, PageRequest pageRequest) {
+        return bookRepository.findAll(specification, pageRequest);
     }
 }

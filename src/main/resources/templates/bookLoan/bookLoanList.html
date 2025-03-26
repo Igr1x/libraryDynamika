@@ -32,7 +32,7 @@
         <ul>
             <li th:each="bookLoan : ${bookLoans}">
                 <span th:text="${bookLoan.client} + ', ' + ${bookLoan.book} + ', ' + ${bookLoan.borrowedAt}"></span>
-                <button type="submit" th:formaction="@{/bookLoan/returnBook/{id}(id=${bookLoan.id}, page=${currentPage}, showReturned=${showReturned})}">
+                <button type="submit" th:formaction="@{/bookLoan/returnBook/{id}(id=${bookLoan.id}, page=${currentPage}, showReturned=${showReturned != null ? showReturned : false})}">
                     Вернуть книгу
                 </button>
             </li>
@@ -43,7 +43,11 @@
 <div th:if="${bookLoans == null or bookLoans.size() == 0}">
     <p>Записи отсутствуют</p>
 </div>
-
-<a href="/home">Вернуться на главную</a>
+<div>
+    <a href="/bookLoan/addRecord">Создать запись</a>
+</div>
+<div>
+    <a href="/home">Вернуться на главную</a>
+</div>
 </body>
 </html>
