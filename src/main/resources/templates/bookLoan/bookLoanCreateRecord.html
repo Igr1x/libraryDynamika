@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search book and client</title>
+    <script>
+        function validateSelection() {
+            const clientSelected = document.querySelector('input[name="clientId"]:checked');
+            const bookSelected = document.querySelector('input[name="bookId"]:checked');
+            const messageDiv = document.getElementById('message');
+
+            if (!clientSelected || !bookSelected) {
+                messageDiv.innerHTML = "Пожалуйста, выберите и клиента, и книгу!";
+                messageDiv.style.color = 'red';
+                return false;
+            } else {
+                messageDiv.innerHTML = "";
+                return true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('clientSelectionForm');
+            form.addEventListener('submit', function(event) {
+                if (!validateSelection()) {
+                    event.preventDefault();
+                }
+            });
+            const clientRadios = document.querySelectorAll('input[name="clientId"]');
+            const bookRadios = document.querySelectorAll('input[name="bookId"]');
+            clientRadios.forEach(radio => radio.addEventListener('change', validateSelection));
+            bookRadios.forEach(radio => radio.addEventListener('change', validateSelection));
+        });
+    </script>
+</head>
+<body>
+<h1>Список клиентов и книг</h1>
+
+<h2>Поиск по клиентам</h2>
+<form th:action="@{/bookLoan/addRecord}" method="get">
+    <label for="firstName">Имя</label>
+    <input type="text" id="firstName" name="firstName" th:value="${clientFilterIn.firstName}">
+    <label for="lastName">Фамилия</label>
+    <input type="text" id="lastName" name="lastName" th:value="${clientFilterIn.lastName}">
+    <label for="patronymic">Отчество</label>
+    <input type="text" id="patronymic" name="patronymic" th:value="${clientFilterIn.patronymic}">
+    <label for="birthDate">Дата рождения</label>
+    <input type="date" id="birthDate" name="birthDate" th:value="${clientFilterIn.birthDate}">
+
+    <input type="hidden" name="page" th:value="${currentPage}">
+    <input type="hidden" name="size" th:value="${size}">
+    <input type="hidden" name="bookPage" th:value="${bookCurrentPage}">
+    <input type="hidden" name="bookSize" th:value="${bookSize}">
+    <input type="hidden" name="title" th:value="${bookFilterIn.title}">
+    <input type="hidden" name="author" th:value="${bookFilterIn.author}">
+    <input type="hidden" name="isbn" th:value="${bookFilterIn.isbn}">
+
+    <button type="submit">Поиск по клиентам</button>
+</form>
+
+<form id="clientSelectionForm" action="/bookLoan/takeBook" method="post">
+    <h2>Список клиентов</h2>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Отчество</th>
+            <th>Дата рождения</th>
+            <th>Выбор</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="client : ${clients}">
+            <td th:text="${client.firstName}"></td>
+            <td th:text="${client.lastName}"></td>
+            <td th:text="${client.patronymic}"></td>
+            <td th:text="${client.birthDate}"></td>
+            <td>
+                <input type="radio" name="clientId" th:value="${client.id}" th:id="'client_' + ${client.id}">
+                <label th:for="'client_' + ${client.id}">Выбрать</label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Поиск по книгам</h2>
+    <form th:action="@{/bookLoan/addRecord}" method="get">
+        <label for="title">Название книги</label>
+        <input type="text" id="title" name="title" th:value="${bookFilterIn.title}">
+        <label for="author">Автор</label>
+        <input type="text" id="author" name="author" th:value="${bookFilterIn.author}">
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" name="isbn" th:value="${bookFilterIn.isbn}">
+
+        <input type="hidden" name="page" th:value="${currentPage}">
+        <input type="hidden" name="size" th:value="${size}">
+        <input type="hidden" name="clientPage" th:value="${clientCurrentPage}">
+        <input type="hidden" name="clientSize" th:value="${clientSize}">
+        <input type="hidden" name="firstName" th:value="${clientFilterIn.firstName}">
+        <input type="hidden" name="lastName" th:value="${clientFilterIn.lastName}">
+        <input type="hidden" name="patronymic" th:value="${clientFilterIn.patronymic}">
+        <input type="hidden" name="birthDate" th:value="${clientFilterIn.birthDate}">
+
+    <h2>Поиск по книгам</h2>
+    <form th:action="@{/bookLoan/addRecord}" method="get">
+        <label for="title">Название книги</label>
+        <input type="text" id="title" name="title" th:value="${bookFilterIn.title}">
+        <label for="author">Автор</label>
+        <input type="text" id="author" name="author" th:value="${bookFilterIn.author}">
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" name="isbn" th:value="${bookFilterIn.isbn}">
+
+        <input type="hidden" name="page" th:value="${currentPage}">
+        <input type="hidden" name="size" th:value="${size}">
+        <input type="hidden" name="clientPage" th:value="${clientCurrentPage}">
+        <input type="hidden" name="clientSize" th:value="${clientSize}">
+        <input type="hidden" name="firstName" th:value="${clientFilterIn.firstName}">
+        <input type="hidden" name="lastName" th:value="${clientFilterIn.lastName}">
+        <input type="hidden" name="patronymic" th:value="${clientFilterIn.patronymic}">
+        <input type="hidden" name="birthDate" th:value="${clientFilterIn.birthDate}">
+
+        <h2>Список книг</h2>
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Автор</th>
+                <th>Дата публикации</th>
+                <th>Выбор</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.isbn}"></td>
+                <td>
+                    <input type="radio" name="bookId" th:value="${book.id}" th:id="'book_' + ${book.id}">
+                    <label th:for="'book_' + ${book.id}">Выбрать</label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button type="submit">Создать запись</button>
+    </form>
+
+    <div id="message"></div>
+
+</body>
+</html>

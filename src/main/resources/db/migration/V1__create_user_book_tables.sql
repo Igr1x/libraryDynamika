@@ -8,6 +8,7 @@ CREATE TABLE client (
 
 CREATE TABLE book (
     id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
     author VARCHAR(255) NOT NULL,
     isbn VARCHAR(13) NOT NULL
 );
@@ -19,6 +20,6 @@ CREATE TABLE book_loans (
     borrowed_at DATE NOT NULL,
     returned_at DATE DEFAULT NULL,
 
-    CONSTRAINT fk_book_loans_client FOREIGN KEY (client_id) REFERENCES client(id),
-    CONSTRAINT fk_book_loans_book FOREIGN KEY (book_id) REFERENCES book(id)
+    CONSTRAINT fk_book_loans_client FOREIGN KEY (client_id) REFERENCES client(id) ON DELETE CASCADE,
+    CONSTRAINT fk_book_loans_book FOREIGN KEY (book_id) REFERENCES book(id) ON DELETE CASCADE
 );

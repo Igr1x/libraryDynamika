@@ -19,11 +19,14 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "bookEntity")
+@Table(name = "book")
 public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
     private String author;

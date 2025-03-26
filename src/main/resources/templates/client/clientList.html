@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Client List</title>
+</head>
+<body>
+<h1>Все клиенты</h1>
+<div>
+    <a th:href="@{/client/list(page=0)}">Первая</a>
+    <a th:href="@{/client/list(page=${currentPage - 1})}" th:if="${currentPage > 0}">Предыдущая</a>
+    <span>Страница <span th:text="${currentPage != null ? currentPage + 1 : 1}">0</span></span>
+    <a th:href="@{/client/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages - 1}">Следующая</a>
+    <a th:href="@{/client/list(page=${totalPages - 1})}" th:if="${totalPages > 1}">Последняя</a>
+</div>
+
+<div th:if="${clients != null and clients.size() > 0}">
+    <h3>Имя, фамилия, дата рождения</h3>
+    <form id="deleteForm" method="POST" action="/client/delete">
+        <input type="hidden" name="page" th:value="${currentPage}"/>
+        <ul>
+            <li th:each="client : ${clients}">
+                <input type="checkbox" th:value="${client.id}" name="idsToDelete"/>
+                <a th:href="@{/client/{id}(id=${client.id})}"
+                   th:text="${client.firstName} + ' ' + ${client.lastName} + ' ' + ${client.birthDate}"></a>
+            </li>
+        </ul>
+        <button type="submit">Удалить выбранные</button>
+    </form>
+</div>
+
+<div th:if="${clients == null or clients.size() == 0}">
+    <p>Клиенты не созданы.</p>
+</div>
+
+<h2>Добавить клиента</h2>
+<form th:action="@{/client}" th:object="${newClient}" method="post">
+    <div>
+        <label for="firstName">Имя:</label>
+        <input type="text" id="firstName" th:field="*{firstName}" required/>
+        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+    </div>
+    <div>
+        <label for="lastName">Фамилия:</label>
+        <input type="text" id="lastName" th:field="*{lastName}" required/>
+        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+    </div>
+    <div>
+        <label for="patronymic">Отчетсво (опциально):</label>
+        <input type="text" id="patronymic" th:field="*{patronymic}"/>
+    </div>
+    <div>
+        <label for="birthDate">Дата рождения:</label>
+        <input type="date" id="birthDate" th:field="*{birthDate}" required/>
+        <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
+    </div>
+    <div>
+        <button type="submit">Добавить клиента</button>
+    </div>
+</form>
+
+<a href="/home">Вернуться на главную</a>
+</body>
+</html>
