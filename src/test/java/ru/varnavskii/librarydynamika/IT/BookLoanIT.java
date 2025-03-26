@@ -1,12 +1,10 @@
-package ru.varnavskii.librarydynamika.service.IT.annotation;
+package ru.varnavskii.librarydynamika.IT;
 
 import lombok.SneakyThrows;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-
-import ru.varnavskii.librarydynamika.service.IT.IntegrationTestBase;
 
 import java.time.LocalDate;
 
