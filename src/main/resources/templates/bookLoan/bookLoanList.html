@@ -18,11 +18,11 @@
     </div>
 </form>
 
-<a th:href="@{/bookLoan/list(page=0)}">Первая</a>
-<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage - 1 : 0})}" th:if="${currentPage != null and currentPage > 0}">Предыдущая</a>
+<a th:href="@{/bookLoan/list(page=0, showReturned=${showReturned})}">Первая</a>
+<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage - 1 : 0}, showReturned=${showReturned})}" th:if="${currentPage != null and currentPage > 0}">Предыдущая</a>
 <span>Страница <span th:text="${currentPage != null ? currentPage + 1 : 1}">0</span></span>
-<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage + 1 : 0})}" th:if="${currentPage != null and currentPage < totalPages - 1}">Следующая</a>
-<a th:href="@{/bookLoan/list(page=${totalPages != null && totalPages > 1 ? totalPages - 1 : 0})}" th:if="${totalPages != null and totalPages > 1}">Последняя</a>
+<a th:href="@{/bookLoan/list(page=${currentPage != null ? currentPage + 1 : 0}, showReturned=${showReturned})}" th:if="${currentPage != null and currentPage < totalPages - 1}">Следующая</a>
+<a th:href="@{/bookLoan/list(page=${totalPages != null && totalPages > 1 ? totalPages - 1 : 0}, showReturned=${showReturned})}" th:if="${totalPages != null and totalPages > 1}">Последняя</a>
 
 <div th:if="${bookLoans != null and bookLoans.size() > 0}">
     <h3>Клиент, название книги, дата взятия</h3>
@@ -31,14 +31,20 @@
         <input type="hidden" name="showReturned" th:value="${showReturned}"/>
         <ul>
             <li th:each="bookLoan : ${bookLoans}">
-                <span th:text="${bookLoan.client} + ', ' + ${bookLoan.book} + ', ' + ${bookLoan.borrowedAt}"></span>
-                <button type="submit" th:formaction="@{/bookLoan/returnBook/{id}(id=${bookLoan.id}, page=${currentPage}, showReturned=${showReturned != null ? showReturned : false})}">
-                    Вернуть книгу
-                </button>
+                <span th:text="${bookLoan.client} + ', ' + ${bookLoan.bookTitle} + ', ' + ${bookLoan.taken}"></span>
+                <div th:if="${bookLoan.returned != null}">
+                    <span th:text="'Дата возврата: ' + ${bookLoan.returned}"></span>
+                </div>
+                <div th:if="${bookLoan.returned == null}">
+                    <button type="submit" th:formaction="@{/bookLoan/returnBook/{id}(id=${bookLoan.id}, page=${currentPage}, showReturned=${showReturned != null ? showReturned : false})}">
+                        Вернуть книгу
+                    </button>
+                </div>
             </li>
         </ul>
     </form>
 </div>
+
 
 <div th:if="${bookLoans == null or bookLoans.size() == 0}">
     <p>Записи отсутствуют</p>

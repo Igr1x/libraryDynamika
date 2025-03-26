@@ -20,7 +20,9 @@ import ru.varnavskii.librarydynamika.common.utils.ClientFilterApplier;
 import ru.varnavskii.librarydynamika.common.utils.PaginationUtils;
 import ru.varnavskii.librarydynamika.controller.dto.BookFilterIn;
 import ru.varnavskii.librarydynamika.controller.dto.BookLoanIn;
+import ru.varnavskii.librarydynamika.controller.dto.BookLoanOutShort;
 import ru.varnavskii.librarydynamika.controller.dto.ClientFilterIn;
+import ru.varnavskii.librarydynamika.controller.mapping.BookLoanMapper;
 import ru.varnavskii.librarydynamika.repository.entity.BookEntity;
 import ru.varnavskii.librarydynamika.repository.entity.BookLoanEntity;
 import ru.varnavskii.librarydynamika.repository.entity.ClientEntity;
@@ -29,6 +31,9 @@ import ru.varnavskii.librarydynamika.service.BookService;
 import ru.varnavskii.librarydynamika.service.ClientService;
 
 import javax.validation.Valid;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/bookLoan")
@@ -46,10 +51,12 @@ public class BookLoanController {
     public static final String BOOK_FILTER_IN_ATTRIBUTE = "bookFilterIn";
     public static final String CLIENT_FILTER_IN_ATTRIBUTE = "clientFilterIn";
     public static final String SIZE_ATTRIBUTE = "size";
+    public static final String SHOW_RETURNED_ATTRIBUTE = "showReturned";
 
     private final BookLoanService bookLoanService;
     private final ClientService clientService;
     private final BookService bookService;
+    private final BookLoanMapper bookLoanMapper;
 
     @GetMapping("/list")
     public ModelAndView getBookLoan(@RequestParam(defaultValue = "0") int page,
@@ -57,11 +64,15 @@ public class BookLoanController {
                                     @RequestParam(defaultValue = "false") boolean showReturned,
                                     ModelAndView modelAndView) {
         Page<BookLoanEntity> bookLoanEntities = bookLoanService.getBookLoans(PageRequest.of(page, size), showReturned);
+        List<BookLoanOutShort> records = bookLoanEntities.getContent().stream()
+            .map(bookLoanMapper::toOutShort)
+            .collect(Collectors.toList());
 
-        modelAndView.addObject(BOOK_LOANS_ATTRIBUTE, bookLoanEntities.getContent());
+        modelAndView.addObject(BOOK_LOANS_ATTRIBUTE, records);
         modelAndView.addObject(PaginationUtils.CURRENT_PAGE_ATTRIBUTE, page);
         modelAndView.addObject(PaginationUtils.TOTAL_PAGES_ATTRIBUTE, bookLoanEntities.getTotalPages());
         modelAndView.addObject(NEW_BOOK_LOAN_ATTRIBUTE, new BookLoanIn(null, null));
+        modelAndView.addObject(SHOW_RETURNED_ATTRIBUTE, showReturned);
         modelAndView.setViewName(BOOK_LOAN_LIST_VIEW);
         return modelAndView;
     }
